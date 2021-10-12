@@ -695,15 +695,15 @@ looker.plugins.visualizations.add({
     // Clear any errors from previous updates
     this.clearErrors();
 
-    if (!data.length) {
+    if (data.length < 1) {
       // Issue identified where viz would not change with table calc filters
       // need to supply the container with something new if we fail early and 
       // don't make it to the inteded render function. 
       // https://looker.atlassian.net/browse/DX-5779
-      this.chart = ReactDOM.render(<></>, this.container)
       this.addError({
         title: "No Results",
       })
+      done();
       return;
     }
 
