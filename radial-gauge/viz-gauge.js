@@ -772,7 +772,7 @@ looker.plugins.visualizations.add({
       chunk = processData(data, queryResponse, config, this);
     }
 
-    if (config.range_max === DEFAULT_MAX_RANGE) {
+    if (!config.range_max || config.range_max === DEFAULT_MAX_RANGE) {
       let num = Math.max(
         Math.ceil(chunk.value),
         chunk.target ? Math.ceil(chunk.target) : 0
