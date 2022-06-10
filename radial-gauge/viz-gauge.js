@@ -10,7 +10,6 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
   let dims, meas;
   dims = queryResponse["fields"]["dimension_like"];
   meas = queryResponse["fields"]["measure_like"];
-  
   if (dims.length > 0) {
     var dimID = dims[0]["name"];
     var dimData = data[0][dimID][pivotKey];
