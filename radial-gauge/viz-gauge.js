@@ -185,6 +185,12 @@ function processData(data, queryResponse, config, viz) {
   }
   var mesID = meas[0]["name"];
   var mesData = data[0][mesID];
+
+  // if value/rendered aren't there then this is an object of objects (pivot)
+  if(mesData["value"] === undefined && mesData["rendered"] === undefined) {
+    mesData = mesData[Object.keys(mesData)[0]];
+  }
+
   var mesLabel =
     meas[0]["label_short"] === undefined
       ? meas[0]["label"]
@@ -234,7 +240,14 @@ function processData(data, queryResponse, config, viz) {
         message: "No value to target. Add a second row or modify label type.",
       });
     }
-    var tarData = data[1][mesID];
+
+    var tarData = data[0][mesID];
+
+    // if value/rendered aren't there then this is an object of objects (pivot)
+    if(tarData["value"] === undefined && tarData["rendered"] === undefined) {
+      tarData = tarData[Object.keys(tarData)[0]];
+    }
+
     var tarValue = tarData.value;
     var tarBase =
       tarData.rendered === undefined || tarData.rendered === ""
