@@ -10,7 +10,6 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
   let dims, meas;
   dims = queryResponse["fields"]["dimension_like"];
   meas = queryResponse["fields"]["measure_like"];
-
   if (dims.length > 0) {
     var dimID = dims[0]["name"];
     var dimData = data[0][dimID][pivotKey];
@@ -355,7 +354,6 @@ looker.plugins.visualizations.add({
     spinner_weight: {
       type: "number",
       label: "Thickness",
-      default: 73,
       section: "Plot",
       display: "range",
       min: 0,
@@ -394,7 +392,6 @@ looker.plugins.visualizations.add({
       display: "range",
       min: 0,
       max: 100,
-      default: 25,
       order: 700,
       display_size: "third",
     },
@@ -731,16 +728,10 @@ looker.plugins.visualizations.add({
     }
 
     // Catch case where config is undefined on db-next
-    const applyDefualtConfig = () => {
-      for (let option in this.options) {
-        if (config[option] === undefined) {
-          config[option] = this.options[option].default;
-        }
+    for (let option in this.options) {
+      if (config[option] === undefined) {
+        config[option] = this.options[option].default;
       }
-    };
-    // if arm_length is undefined, all other config attributes are.
-    if (config.arm_length === undefined) {
-      applyDefualtConfig();
     }
 
     // Extract value, value_label, target, target_label as a chunk
@@ -846,7 +837,6 @@ looker.plugins.visualizations.add({
       );
     } else {
       chunk_multiples.forEach(function (d, i) {
-        // console.log(d, i)
         let limit =
           config.viz_trellis_by === "row"
             ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
