@@ -8,7 +8,7 @@ Great! Marketplace content -- including visualizations -- were designed for cont
 
 #### Quickstart Dev Instructions
 
-1.  **Install Dependecies.**
+1.  **Install Dependencies.**
 
     Using yarn, install all dependencies
 
