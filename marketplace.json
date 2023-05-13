@@ -5,7 +5,6 @@
     "image_uri": "https://marketplace-api.looker.com/visualization-screenshots/radial_gauge_icon.png",
     "tagline": "Use the Radial Gauge visualization to display a measure and progress to a goal with a highly customizable gauge."
   },
-
   "constants": {
     "VIS_LABEL": {
       "label": "Visualization Label",
