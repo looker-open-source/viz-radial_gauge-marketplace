@@ -1,30 +1,30 @@
-var path = require("path");
+var path = require('path');
 
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var webpackConfig = {
-  mode: "production",
+  mode: 'production',
   entry: {
-    radialgauge: "./radial-gauge/viz-gauge.js",
+    radialgauge: './src/viz_gauge.js',
   },
   devServer: {
-    contentBase: "./dist",
+    contentBase: './dist',
   },
   output: {
-    filename: "[name]_v2.js",
+    filename: '[name]_v2.js',
     path: __dirname,
-    library: "[name]",
-    libraryTarget: "umd",
+    library: '[name]',
+    libraryTarget: 'umd',
   },
   resolve: {
-    extensions: [".js"],
-    modules: [path.join(__dirname, "../src"), "node_modules"],
+    extensions: ['.js'],
+    modules: [path.join(__dirname, '../src'), 'node_modules'],
   },
   plugins: [new UglifyJSPlugin()],
   module: {
     rules: [
-      { test: /\.(js|jsx)$/, use: "babel-loader" },
-      { test: /\.css$/, loader: ["to-string-loader", "css-loader"] },
+      {test: /\.(js|jsx)$/, use: 'babel-loader'},
+      {test: /\.css$/, loader: ['to-string-loader', 'css-loader']},
     ],
   },
   stats: {},

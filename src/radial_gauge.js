@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import * as d3 from "d3";
-import SSF from "ssf";
+import React, {useEffect} from 'react';
+import * as d3 from 'd3';
+import SSF from 'ssf';
 // import { configs } from 'eslint-plugin-prettier';
 
-const RadialGauge = (props) => {
+const RadialGauge = props => {
   useEffect(() => {
     drawRadial(props);
   }, [props]);
@@ -24,27 +24,27 @@ function wrap(text, width) {
       line = [],
       lineNumber = 0,
       lineHeight = 1.4, // ems
-      y = text.attr("y"),
-      x = text.attr("x"),
-      dy = parseFloat(text.attr("dy")),
+      y = text.attr('y'),
+      x = text.attr('x'),
+      dy = parseFloat(text.attr('dy')),
       tspan = text
         .text(null)
-        .append("tspan")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("dy", dy + "em");
+        .append('tspan')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('dy', dy + 'em');
     while ((word = words.pop())) {
       line.push(word);
-      tspan.text(line.join(" "));
+      tspan.text(line.join(' '));
       if (tspan.node().getComputedTextLength() > width) {
         line.pop();
-        tspan.text(line.join(" "));
+        tspan.text(line.join(' '));
         line = [word];
         tspan = text
-          .append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', ++lineNumber * lineHeight + dy + 'em')
           .text(word);
       }
     }
@@ -53,20 +53,20 @@ function wrap(text, width) {
 
 function getLabel(rule, value, label, override) {
   // console.log(rule, value, label, override)
-  label = override === "" ? label : override;
-  if (rule === "value") {
+  label = override === '' ? label : override;
+  if (rule === 'value') {
     return `${value}`;
-  } else if (rule === "label") {
+  } else if (rule === 'label') {
     return `${label}`;
-  } else if (rule === "both") {
+  } else if (rule === 'both') {
     return `${value} ${label}`;
-  } else if (rule === "none") {
+  } else if (rule === 'none') {
     return ``;
   }
 }
 
-const drawRadial = (props) => {
-  let limiting_aspect = props.w < props.h ? "vw" : "vh";
+const drawRadial = props => {
+  let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
   let radius = 0.4 * Math.min(props.w, props.h);
   let cutoutCalc = radius * (props.cutout / 100);
   let valueLabelCalc = radius * (props.value_label_padding / 100);
@@ -91,7 +91,7 @@ const drawRadial = (props) => {
   }
 
   // Ditch whatever is in our viz window
-  if (props.trellis_by === "none") {
+  if (props.trellis_by === 'none') {
     d3.selectAll(`.viz > *`).remove();
     d3.selectAll(`.${props.cleanup}`).remove();
     d3.selectAll(`[class^='subgauge']`).remove();
@@ -111,21 +111,21 @@ const drawRadial = (props) => {
   }
   // div that houses the svg
   var div = d3
-    .select(".viz")
-    .style("overflow-x", "hidden")
-    .style("overflow-y", "hidden")
-    .style("position", "fixed")
-    .attr("height", "100%");
+    .select('.viz')
+    .style('overflow-x', 'hidden')
+    .style('overflow-y', 'hidden')
+    .style('position', 'fixed')
+    .attr('height', '100%');
   // append a fresh svg
-  const svg = d3.select(".viz").append("svg");
+  const svg = d3.select('.viz').append('svg');
   svg
-    .attr("width", props.w)
-    .attr("height", props.h)
-    .attr("id", "svg-viz")
-    .attr("class", props.cleanup)
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("viewBox", `${props.w / -2} ${props.h / -2} ${props.w} ${props.h}`);
-  let g = svg.append("g").attr("id", "g-viz");
+    .attr('width', props.w)
+    .attr('height', props.h)
+    .attr('id', 'svg-viz')
+    .attr('class', props.cleanup)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('viewBox', `${props.w / -2} ${props.h / -2} ${props.w} ${props.h}`);
+  let g = svg.append('g').attr('id', 'g-viz');
   // create the gauge background
   var generator = d3
     .arc()
@@ -134,11 +134,11 @@ const drawRadial = (props) => {
     .startAngle(-gaugeAngle)
     .endAngle(gaugeAngle);
   var cover = g
-    .append("path")
-    .attr("class", "gauge_background")
-    .attr("d", generator)
-    .attr("fill", props.gauge_background)
-    .attr("stroke", "none");
+    .append('path')
+    .attr('class', 'gauge_background')
+    .attr('d', generator)
+    .attr('fill', props.gauge_background)
+    .attr('stroke', 'none');
 
   // find how much of the gauge is filled
   // then fill the gauge
@@ -152,7 +152,7 @@ const drawRadial = (props) => {
   var value_standard = props.angle * 2 * proportion - props.angle;
   var valueAngle = (value_standard * Math.PI * 2) / 360;
   var upBinary = props.angle < 90 ? -1 : 1;
-  if (props.gauge_fill_type === "progress") {
+  if (props.gauge_fill_type === 'progress') {
     var fill_generator = d3
       .arc()
       .innerRadius(cutoutCalc)
@@ -160,13 +160,13 @@ const drawRadial = (props) => {
       .startAngle(-gaugeAngle)
       .endAngle(valueAngle);
     var gauge_fill = g
-      .append("path")
-      .attr("class", "gaugeFill")
-      .attr("d", fill_generator)
-      .attr("fill", props.color)
-      .attr("stroke", `${props.color}`)
-      .attr("stroke-width", "1px");
-  } else if (props.gauge_fill_type === "segment") {
+      .append('path')
+      .attr('class', 'gaugeFill')
+      .attr('d', fill_generator)
+      .attr('fill', props.color)
+      .attr('stroke', `${props.color}`)
+      .attr('stroke-width', '1px');
+  } else if (props.gauge_fill_type === 'segment') {
     let len = props.fill_colors.length;
     props.fill_colors.map((d, i) => {
       var Jpro = i / len;
@@ -182,14 +182,14 @@ const drawRadial = (props) => {
         .startAngle(JiAngle)
         .endAngle(KiAngle);
       var gauge_fill = g
-        .append("path")
-        .attr("class", `gaugeFill-${i}`)
-        .attr("d", fill_generator)
-        .attr("fill", props.fill_colors[i])
-        .attr("stroke", `${props.fill_colors[i]}`)
-        .attr("stroke-width", "1px");
+        .append('path')
+        .attr('class', `gaugeFill-${i}`)
+        .attr('d', fill_generator)
+        .attr('fill', props.fill_colors[i])
+        .attr('stroke', `${props.fill_colors[i]}`)
+        .attr('stroke-width', '1px');
     });
-  } else if (props.gauge_fill_type === "progress-gradient") {
+  } else if (props.gauge_fill_type === 'progress-gradient') {
     let divisor = 1 / props.fill_colors.length;
     let which = Math.floor(proportion / divisor);
     which = proportion >= 1 ? props.fill_colors.length - 1 : which;
@@ -200,12 +200,12 @@ const drawRadial = (props) => {
       .startAngle(-gaugeAngle)
       .endAngle(valueAngle);
     var gauge_fill = g
-      .append("path")
-      .attr("class", "gaugeFill")
-      .attr("d", fill_generator)
-      .attr("fill", props.fill_colors[which])
-      .attr("stroke", `${props.fill_colors[which]}`)
-      .attr("stroke-width", "1px");
+      .append('path')
+      .attr('class', 'gaugeFill')
+      .attr('d', fill_generator)
+      .attr('fill', props.fill_colors[which])
+      .attr('stroke', `${props.fill_colors[which]}`)
+      .attr('stroke-width', '1px');
   }
   // creates a left arm border
   var leftArmArc = d3
@@ -215,29 +215,29 @@ const drawRadial = (props) => {
     .startAngle(-gaugeAngle)
     .endAngle(-gaugeAngle);
   var leftArmSel = g
-    .append("path")
-    .attr("class", "leftArmArc")
-    .attr("d", leftArmArc)
-    .attr("fill", props.gauge_background)
-    .attr("stroke", props.gauge_background)
-    .attr("stroke-width", props.arm_weight / 5);
-  g.append("text")
-    .attr("class", "minLabel")
+    .append('path')
+    .attr('class', 'leftArmArc')
+    .attr('d', leftArmArc)
+    .attr('fill', props.gauge_background)
+    .attr('stroke', props.gauge_background)
+    .attr('stroke-width', props.arm_weight / 5);
+  g.append('text')
+    .attr('class', 'minLabel')
     .text(
       `${
-        props.range_formatting === undefined || props.range_formatting === ""
+        props.range_formatting === undefined || props.range_formatting === ''
           ? props.range[0]
           : SSF.format(props.range_formatting, props.range[0])
       }`
     )
-    .style("font-size", `${props.label_font}${limiting_aspect}`)
-    .style("font-family", "Arial, Helvetica, sans-serif")
-    .style("fill", props.range_color)
-    .style("font-weight", "bold")
-    .attr("dx", `-${props.range_x}em`)
-    .attr("dy", `${-1 * props.range_y}em`)
+    .style('font-size', `${props.label_font}${limiting_aspect}`)
+    .style('font-family', 'Arial, Helvetica, sans-serif')
+    .style('fill', props.range_color)
+    .style('font-weight', 'bold')
+    .attr('dx', `-${props.range_x}em`)
+    .attr('dy', `${-1 * props.range_y}em`)
     .attr(
-      "transform",
+      'transform',
       `translate(${leftArmSel.node().getBBox().x} ${
         0 +
         upBinary * leftArmSel.node().getBBox().height -
@@ -252,29 +252,29 @@ const drawRadial = (props) => {
     .startAngle(gaugeAngle)
     .endAngle(gaugeAngle);
   var rightArmSel = g
-    .append("path")
-    .attr("class", "rightArmArc")
-    .attr("d", rightArmArc)
-    .attr("fill", props.gauge_background)
-    .attr("stroke", props.gauge_background)
-    .attr("stroke-width", props.arm_weight / 5);
-  g.append("text")
-    .attr("class", "maxLabel")
+    .append('path')
+    .attr('class', 'rightArmArc')
+    .attr('d', rightArmArc)
+    .attr('fill', props.gauge_background)
+    .attr('stroke', props.gauge_background)
+    .attr('stroke-width', props.arm_weight / 5);
+  g.append('text')
+    .attr('class', 'maxLabel')
     .text(
       `${
-        props.range_formatting === undefined || props.range_formatting === ""
+        props.range_formatting === undefined || props.range_formatting === ''
           ? props.range[1]
           : SSF.format(props.range_formatting, props.range[1])
       }`
     )
-    .style("font-size", `${props.label_font}${limiting_aspect}`)
-    .style("font-family", "Arial, Helvetica, sans-serif")
-    .style("fill", props.range_color)
-    .style("font-weight", "bold")
-    .attr("dx", `${props.range_x - 1}em`)
-    .attr("dy", `${-1 * props.range_y}em`)
+    .style('font-size', `${props.label_font}${limiting_aspect}`)
+    .style('font-family', 'Arial, Helvetica, sans-serif')
+    .style('fill', props.range_color)
+    .style('font-weight', 'bold')
+    .attr('dx', `${props.range_x - 1}em`)
+    .attr('dy', `${-1 * props.range_y}em`)
     .attr(
-      "transform",
+      'transform',
       `translate(${
         rightArmSel.node().getBBox().x + rightArmSel.node().getBBox().width
       } ${
@@ -286,14 +286,14 @@ const drawRadial = (props) => {
 
   // create the spinner and point to the value
   function getSpinnerArm(spinnerType) {
-    if (spinnerType === "spinner") {
+    if (spinnerType === 'spinner') {
       return d3
         .arc()
         .innerRadius(0)
         .outerRadius(spinnerLength)
         .startAngle(valueAngle)
         .endAngle(valueAngle);
-    } else if (spinnerType === "needle") {
+    } else if (spinnerType === 'needle') {
       var _in = valueAngle - Math.PI / 2,
         _im = _in - (55 * Math.PI) / 60,
         _ip = _in + (55 * Math.PI) / 60;
@@ -312,9 +312,9 @@ const drawRadial = (props) => {
           [topX, topY],
           [leftX, leftY],
           [rightX, rightY],
-        ]) + "Z"
+        ]) + 'Z'
       );
-    } else if (spinnerType === "auto") {
+    } else if (spinnerType === 'auto') {
       var _in = valueAngle - Math.PI / 2,
         _im = _in - (55 * Math.PI) / 60,
         _ip = _in + (55 * Math.PI) / 60;
@@ -333,9 +333,9 @@ const drawRadial = (props) => {
           [topX, topY],
           [leftX, leftY],
           [rightX, rightY],
-        ]) + "Z"
+        ]) + 'Z'
       );
-    } else if (spinnerType === "inner") {
+    } else if (spinnerType === 'inner') {
       return d3
         .arc()
         .innerRadius(cutoutCalc)
@@ -347,43 +347,43 @@ const drawRadial = (props) => {
   var spinnerArm = getSpinnerArm(props.spinner_type);
 
   var spinnerArmSel = g
-    .append("path")
-    .attr("class", "spinnerArm")
-    .attr("d", spinnerArm)
-    .attr("fill", props.spinner_background)
-    .attr("stroke", props.spinner_background)
-    .attr("stroke-width", props.spinner_weight / 10);
+    .append('path')
+    .attr('class', 'spinnerArm')
+    .attr('d', spinnerArm)
+    .attr('fill', props.spinner_background)
+    .attr('stroke', props.spinner_background)
+    .attr('stroke-width', props.spinner_weight / 10);
 
   function getSpinnerCore(spinnerType) {
-    if (spinnerType === "spinner") {
+    if (spinnerType === 'spinner') {
       return g
-        .append("circle")
-        .attr("class", "spinnerCenter")
-        .attr("r", props.spinner_weight / 10)
-        .style("fill", props.spinner_background);
-    } else if (spinnerType === "needle" || spinnerType === "inner") {
+        .append('circle')
+        .attr('class', 'spinnerCenter')
+        .attr('r', props.spinner_weight / 10)
+        .style('fill', props.spinner_background);
+    } else if (spinnerType === 'needle' || spinnerType === 'inner') {
       return null;
-    } else if (spinnerType === "auto") {
+    } else if (spinnerType === 'auto') {
       return g
-        .append("circle")
-        .attr("class", "spinnerCenter")
-        .attr("r", props.spinner_weight / 2)
-        .style("stroke", props.gauge_background)
-        .style("stroke-weight", "2px")
-        .style("fill", "#FFF");
+        .append('circle')
+        .attr('class', 'spinnerCenter')
+        .attr('r', props.spinner_weight / 2)
+        .style('stroke', props.gauge_background)
+        .style('stroke-weight', '2px')
+        .style('fill', '#FFF');
     }
   }
   var spinnerCore = getSpinnerCore(props.spinner_type);
 
-  spinnerArmSel.on("click", function (d, i) {
+  spinnerArmSel.on('click', function (d, i) {
     LookerCharts.Utils.openDrillMenu({
       links: props.value_links,
       event: event,
     });
   });
   // find what percent of the gauge is equivalent to the target value
-  if (props.target_source !== "off") {
-    if (props.target_label_type === "both") {
+  if (props.target_source !== 'off') {
+    if (props.target_label_type === 'both') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -401,12 +401,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
       // label the target spinner value
       var targetLabelArc = d3
         .arc()
@@ -415,18 +415,18 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLabelLine = g
-        .append("path")
-        .attr("class", "targetLabel")
-        .attr("d", targetLabelArc);
+        .append('path')
+        .attr('class', 'targetLabel')
+        .attr('d', targetLabelArc);
       var targetValueLine = g
-        .append("text")
-        .attr("class", "targetValue")
+        .append('text')
+        .attr('class', 'targetValue')
         .text(`${props.target_rendered} ${props.target_label}`)
-        .style("font-size", `${props.target_label_font}${limiting_aspect}`)
-        .style("font-family", "Arial, Helvetica, sans-serif")
-        .attr("dy", ".35em");
+        .style('font-size', `${props.target_label_font}${limiting_aspect}`)
+        .style('font-family', 'Arial, Helvetica, sans-serif')
+        .attr('dy', '.35em');
       targetValueLine
-        .attr("x", () => {
+        .attr('x', () => {
           if (tarNeg > 0) {
             return targetLabelLine.node().getBBox().x;
           } else {
@@ -436,10 +436,10 @@ const drawRadial = (props) => {
             );
           }
         })
-        .attr("y", () => {
+        .attr('y', () => {
           return targetLabelLine.node().getBBox().y;
         });
-    } else if (props.target_label_type === "dboth") {
+    } else if (props.target_label_type === 'dboth') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -457,12 +457,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
       // label the target spinner value
       var targetLabelArc = d3
         .arc()
@@ -471,18 +471,18 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLabelLine = g
-        .append("path")
-        .attr("class", "targetLabel")
-        .attr("d", targetLabelArc);
+        .append('path')
+        .attr('class', 'targetLabel')
+        .attr('d', targetLabelArc);
       var targetValueLine = g
-        .append("text")
-        .attr("class", "targetValue")
+        .append('text')
+        .attr('class', 'targetValue')
         .text(`${props.target_rendered} ${props.target_dimension}`)
-        .style("font-size", `${props.target_label_font}${limiting_aspect}`)
-        .style("font-family", "Arial, Helvetica, sans-serif")
-        .attr("dy", ".35em");
+        .style('font-size', `${props.target_label_font}${limiting_aspect}`)
+        .style('font-family', 'Arial, Helvetica, sans-serif')
+        .attr('dy', '.35em');
       targetValueLine
-        .attr("x", () => {
+        .attr('x', () => {
           if (tarNeg > 0) {
             return targetLabelLine.node().getBBox().x;
           } else {
@@ -492,10 +492,10 @@ const drawRadial = (props) => {
             );
           }
         })
-        .attr("y", () => {
+        .attr('y', () => {
           return targetLabelLine.node().getBBox().y;
         });
-    } else if (props.target_label_type === "dim") {
+    } else if (props.target_label_type === 'dim') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -513,12 +513,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
       // label the target spinner value
       var targetLabelArc = d3
         .arc()
@@ -527,18 +527,18 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLabelLine = g
-        .append("path")
-        .attr("class", "targetLabel")
-        .attr("d", targetLabelArc);
+        .append('path')
+        .attr('class', 'targetLabel')
+        .attr('d', targetLabelArc);
       var targetValueText = g
-        .append("text")
-        .attr("class", "targetValue")
+        .append('text')
+        .attr('class', 'targetValue')
         .text(`${props.target_dimension}`)
-        .style("font-size", `${props.target_label_font}${limiting_aspect}`)
-        .style("font-family", "Arial, Helvetica, sans-serif")
-        .attr("dy", ".35em");
+        .style('font-size', `${props.target_label_font}${limiting_aspect}`)
+        .style('font-family', 'Arial, Helvetica, sans-serif')
+        .attr('dy', '.35em');
       targetValueText
-        .attr("x", () => {
+        .attr('x', () => {
           if (tarNeg > 0) {
             return targetLabelLine.node().getBBox().x;
           } else {
@@ -548,10 +548,10 @@ const drawRadial = (props) => {
             );
           }
         })
-        .attr("y", () => {
+        .attr('y', () => {
           return targetLabelLine.node().getBBox().y;
         });
-    } else if (props.target_label_type === "value") {
+    } else if (props.target_label_type === 'value') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -569,12 +569,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
       // label the target spinner value
       var targetLabelArc = d3
         .arc()
@@ -583,18 +583,18 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLabelLine = g
-        .append("path")
-        .attr("class", "targetLabel")
-        .attr("d", targetLabelArc);
+        .append('path')
+        .attr('class', 'targetLabel')
+        .attr('d', targetLabelArc);
       var targetValueText = g
-        .append("text")
-        .attr("class", "targetValue")
+        .append('text')
+        .attr('class', 'targetValue')
         .text(`${props.target_rendered}`)
-        .style("font-size", `${props.target_label_font}${limiting_aspect}`)
-        .style("font-family", "Arial, Helvetica, sans-serif")
-        .attr("dy", ".35em");
+        .style('font-size', `${props.target_label_font}${limiting_aspect}`)
+        .style('font-family', 'Arial, Helvetica, sans-serif')
+        .attr('dy', '.35em');
       targetValueText
-        .attr("x", () => {
+        .attr('x', () => {
           if (tarNeg > 0) {
             return targetLabelLine.node().getBBox().x;
           } else {
@@ -604,10 +604,10 @@ const drawRadial = (props) => {
             );
           }
         })
-        .attr("y", () => {
+        .attr('y', () => {
           return targetLabelLine.node().getBBox().y;
         });
-    } else if (props.target_label_type === "label") {
+    } else if (props.target_label_type === 'label') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -625,12 +625,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
       // label the target spinner value
       var targetLabelArc = d3
         .arc()
@@ -639,18 +639,18 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLabelLine = g
-        .append("path")
-        .attr("class", "targetLabel")
-        .attr("d", targetLabelArc);
+        .append('path')
+        .attr('class', 'targetLabel')
+        .attr('d', targetLabelArc);
       var targetValueText = g
-        .append("text")
-        .attr("class", "targetValue")
+        .append('text')
+        .attr('class', 'targetValue')
         .text(`${props.target_label}`)
-        .style("font-size", `${props.target_label_font}${limiting_aspect}`)
-        .style("font-family", "Arial, Helvetica, sans-serif")
-        .attr("dy", ".35em");
+        .style('font-size', `${props.target_label_font}${limiting_aspect}`)
+        .style('font-family', 'Arial, Helvetica, sans-serif')
+        .attr('dy', '.35em');
       targetValueText
-        .attr("x", () => {
+        .attr('x', () => {
           if (tarNeg > 0) {
             return targetLabelLine.node().getBBox().x;
           } else {
@@ -660,11 +660,11 @@ const drawRadial = (props) => {
             );
           }
         })
-        .attr("y", () => {
+        .attr('y', () => {
           return targetLabelLine.node().getBBox().y;
         });
       // .call(wrap, props.wrap_width);
-    } else if (props.target_label_type === "nolabel") {
+    } else if (props.target_label_type === 'nolabel') {
       var target_proportion = mapBetween(
         props.target,
         0,
@@ -682,12 +682,12 @@ const drawRadial = (props) => {
         .startAngle(targetAngle)
         .endAngle(targetAngle);
       var targetLine = g
-        .append("path")
-        .attr("class", "targetSpinner")
-        .attr("d", targetSpinner)
-        .attr("stroke", props.target_background)
-        .attr("stroke-width", props.target_weight / 10)
-        .attr("stroke-dasharray", `${props.target_length} ${props.target_gap}`);
+        .append('path')
+        .attr('class', 'targetSpinner')
+        .attr('d', targetSpinner)
+        .attr('stroke', props.target_background)
+        .attr('stroke-width', props.target_weight / 10)
+        .attr('stroke-dasharray', `${props.target_length} ${props.target_gap}`);
     }
   }
   // console.log(props.value_label)
@@ -695,108 +695,108 @@ const drawRadial = (props) => {
   // label the value
   var drillTop = null;
   var drillBottom = null;
-  if (props.value_label_type === "value") {
+  if (props.value_label_type === 'value') {
     var valueText = g
-      .append("text")
-      .attr("class", "gaugeValue")
+      .append('text')
+      .attr('class', 'gaugeValue')
       .text(`${props.value_rendered}`)
-      .style("font-size", `${props.value_label_font}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#282828");
+      .style('font-size', `${props.value_label_font}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#282828');
     valueText.attr(
-      "transform",
+      'transform',
       `translate(${0 - valueText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillTop = valueText;
-  } else if (props.value_label_type === "label") {
+  } else if (props.value_label_type === 'label') {
     var labelText = g
-      .append("text")
-      .attr("class", "gaugeValueLabel")
+      .append('text')
+      .attr('class', 'gaugeValueLabel')
       .text(`${props.value_label}`)
-      .style("font-size", `${props.value_label_font * 0.55}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#707070")
-      .attr("dy", "1em");
+      .style('font-size', `${props.value_label_font * 0.55}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#707070')
+      .attr('dy', '1em');
     labelText.attr(
-      "transform",
+      'transform',
       `translate(${0 - labelText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillTop = labelText;
-  } else if (props.value_label_type === "both") {
+  } else if (props.value_label_type === 'both') {
     var valueText = g
-      .append("text")
-      .attr("class", "gaugeValue")
+      .append('text')
+      .attr('class', 'gaugeValue')
       .text(`${props.value_rendered}`)
-      .style("font-size", `${props.value_label_font}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#282828");
+      .style('font-size', `${props.value_label_font}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#282828');
     valueText.attr(
-      "transform",
+      'transform',
       `translate(${0 - valueText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillTop = valueText;
     var labelText = g
-      .append("text")
-      .attr("class", "gaugeValueLabel")
+      .append('text')
+      .attr('class', 'gaugeValueLabel')
       .text(`${props.value_label}`)
-      .style("font-size", `${props.value_label_font * 0.55}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#707070")
-      .attr("dy", "1.2em");
+      .style('font-size', `${props.value_label_font * 0.55}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#707070')
+      .attr('dy', '1.2em');
     labelText.attr(
-      "transform",
+      'transform',
       `translate(${0 - labelText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillBottom = labelText;
-  } else if (props.value_label_type === "dim") {
+  } else if (props.value_label_type === 'dim') {
     var dimText = g
-      .append("text")
-      .attr("class", "gaugeValueLabel")
+      .append('text')
+      .attr('class', 'gaugeValueLabel')
       .text(`${props.value_dimension}`)
-      .style("font-size", `${props.value_label_font * 0.55}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#707070")
-      .attr("dy", "1em");
+      .style('font-size', `${props.value_label_font * 0.55}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#707070')
+      .attr('dy', '1em');
     dimText.attr(
-      "transform",
+      'transform',
       `translate(${0 - dimText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillTop = dimText;
-  } else if (props.value_label_type === "dboth") {
+  } else if (props.value_label_type === 'dboth') {
     var valueText = g
-      .append("text")
-      .attr("class", "gaugeValue")
+      .append('text')
+      .attr('class', 'gaugeValue')
       .text(`${props.value_rendered}`)
-      .style("font-size", `${props.value_label_font}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#282828");
+      .style('font-size', `${props.value_label_font}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#282828');
     valueText.attr(
-      "transform",
+      'transform',
       `translate(${0 - valueText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
     );
     drillTop = valueText;
     var dimText = g
-      .append("text")
-      .attr("class", "gaugeValueLabel")
+      .append('text')
+      .attr('class', 'gaugeValueLabel')
       .text(`${props.value_dimension}`)
-      .style("font-size", `${props.value_label_font * 0.55}${limiting_aspect}`)
-      .style("font-family", "Arial, Helvetica, sans-serif")
-      .style("color", "#707070")
-      .attr("dy", "1.2em");
+      .style('font-size', `${props.value_label_font * 0.55}${limiting_aspect}`)
+      .style('font-family', 'Arial, Helvetica, sans-serif')
+      .style('color', '#707070')
+      .attr('dy', '1.2em');
     dimText.attr(
-      "transform",
+      'transform',
       `translate(${0 - dimText.node().getBBox().width / 2} ${
         0 + valueLabelCalc
       })`
@@ -805,7 +805,7 @@ const drawRadial = (props) => {
   }
   drillTop === null
     ? null
-    : drillTop.on("click", function (d, i) {
+    : drillTop.on('click', function (d, i) {
         LookerCharts.Utils.openDrillMenu({
           links: props.value_links,
           event: event,
@@ -813,7 +813,7 @@ const drawRadial = (props) => {
       });
   drillBottom === null
     ? null
-    : drillBottom.on("click", function (d, i) {
+    : drillBottom.on('click', function (d, i) {
         LookerCharts.Utils.openDrillMenu({
           links: props.value_links,
           event: event,
@@ -823,16 +823,16 @@ const drawRadial = (props) => {
   let hSca = (props.h * 0.85) / g.node().getBBox().height;
   // console.log(wSca, hSca)
   // g.attr('transform', `scale(${Math.min(wSca, hSca)})translate(0 ${(props.h - g.node().getBBox().height)/4})`);
-  if (props.trellis_by === "none") {
+  if (props.trellis_by === 'none') {
     g.attr(
-      "transform",
+      'transform',
       `scale(${Math.min(wSca, hSca)})translate(0 ${
         (props.h - g.node().getBBox().height) / 4
       })`
     );
   } else {
     g.attr(
-      "transform",
+      'transform',
       `scale(1.2)translate(0 ${(props.h - g.node().getBBox().height) / 4})`
     );
   }

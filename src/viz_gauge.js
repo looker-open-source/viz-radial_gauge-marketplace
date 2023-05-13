@@ -1,17 +1,17 @@
-import RadialGauge from "./RadialGauge";
-import React from "react";
-import ReactDOM from "react-dom";
-import SSF from "ssf";
+import RadialGauge from './radial_gauge';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SSF from 'ssf';
 
-const DEFAULT_MAX_RANGE = null
+const DEFAULT_MAX_RANGE = null;
 
 function processPivot(data, queryResponse, config, viz, pivotKey) {
   data = data.length === undefined ? [data] : data;
   let dims, meas;
-  dims = queryResponse["fields"]["dimension_like"];
-  meas = queryResponse["fields"]["measure_like"];
+  dims = queryResponse['fields']['dimension_like'];
+  meas = queryResponse['fields']['measure_like'];
   if (dims.length > 0) {
-    var dimID = dims[0]["name"];
+    var dimID = dims[0]['name'];
     var dimData = data[0][dimID][pivotKey];
   }
   // if (config.value_label_type === "dim" || config.value_label_type === "dboth") {
@@ -24,84 +24,84 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
   // 		viz.addError({title: 'Invalid Input.', message: 'Add a dimension or modify label type.'});
   // 	}
   // }
-  var mesID = meas[0]["name"];
+  var mesID = meas[0]['name'];
   var mesData = data[0][mesID][pivotKey];
   var mesLabel =
-    meas[0]["label_short"] === undefined
-      ? meas[0]["label"]
-      : meas[0]["label_short"];
+    meas[0]['label_short'] === undefined
+      ? meas[0]['label']
+      : meas[0]['label_short'];
   var mesRendered =
     mesData.rendered === undefined ? mesData.value : mesData.rendered;
 
-  if (config.target_source === "second") {
+  if (config.target_source === 'second') {
     if (meas.length < 2) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "Add a second measure or modify target label source.",
+        title: 'Invalid Input.',
+        message: 'Add a second measure or modify target label source.',
       });
     }
-    var tarID = meas[1]["name"];
+    var tarID = meas[1]['name'];
     var tarData = data[0][tarID][pivotKey];
     var tarValue = tarData.value;
     var tarLabel =
-      meas[1]["label_short"] === undefined
-        ? meas[1]["label"]
-        : meas[1]["label_short"];
+      meas[1]['label_short'] === undefined
+        ? meas[1]['label']
+        : meas[1]['label_short'];
     var tarBase =
       tarData.rendered === undefined ? tarData.value : tarData.rendered;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? pivotKey
           : config.target_label_override;
     }
-  } else if (config.target_source === "first") {
-    if (config.viz_trellis_by === "row") {
+  } else if (config.target_source === 'first') {
+    if (config.viz_trellis_by === 'row') {
       viz.addError({
-        title: "Invalid Input.",
+        title: 'Invalid Input.',
         message:
-          "This option cannot be applied to a trellis. Please modify target label source.",
+          'This option cannot be applied to a trellis. Please modify target label source.',
       });
     } else if (data.length < 2) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "No value to target. Add a second row or modify label type.",
+        title: 'Invalid Input.',
+        message: 'No value to target. Add a second row or modify label type.',
       });
     }
     var tarData = data[1][mesID][pivotKey];
     var tarValue = tarData.value;
     var tarBase =
-      tarData.rendered === undefined || tarData.rendered === ""
+      tarData.rendered === undefined || tarData.rendered === ''
         ? tarValue
         : tarData.rendered;
     var tarLabel = mesLabel;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? pivotKey
           : config.target_label_override;
     }
-  } else if (config.target_source === "override") {
+  } else if (config.target_source === 'override') {
     if (
       config.target_value_override === undefined ||
-      config.target_value_override === ""
+      config.target_value_override === ''
     ) {
       viz.addError({
-        title: "Invalid Input.",
+        title: 'Invalid Input.',
         message:
-          "No target override. Add an override value or modify target label source.",
+          'No target override. Add an override value or modify target label source.',
       });
     }
     var tarValue = parseFloat(config.target_value_override);
@@ -109,13 +109,13 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     var tarLabel = config.target_label_override;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? pivotKey
           : config.target_label_override;
     }
@@ -126,23 +126,23 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     value_links: mesData.links,
     value_label:
       config.value_label_override === undefined ||
-      config.value_label_override === ""
+      config.value_label_override === ''
         ? mesLabel
         : config.value_label_override,
     value_rendered:
-      config.value_formatting === undefined || config.value_formatting === ""
+      config.value_formatting === undefined || config.value_formatting === ''
         ? mesRendered
         : SSF.format(config.value_formatting, mesData.value),
     value_dimension:
       config.value_label_override === undefined ||
-      config.value_label_override === ""
+      config.value_label_override === ''
         ? pivotKey
         : config.value_label_override,
     target: tarValue,
     target_rendered: tarRendered,
     target_label:
       config.target_label_override === undefined ||
-      config.target_label_override === ""
+      config.target_label_override === ''
         ? tarLabel
         : config.target_label_override,
     target_dimension: tarDim,
@@ -153,114 +153,114 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
 function processData(data, queryResponse, config, viz) {
   data = data.length === undefined ? [data] : data;
   let dims, meas;
-  dims = queryResponse["fields"]["dimension_like"];
-  meas = queryResponse["fields"]["measure_like"];
+  dims = queryResponse['fields']['dimension_like'];
+  meas = queryResponse['fields']['measure_like'];
 
   if (dims.length > 0) {
-    var dimID = dims[0]["name"];
+    var dimID = dims[0]['name'];
     var dimData = data[0][dimID];
   }
   if (
-    config.value_label_type === "dim" ||
-    config.value_label_type === "dboth"
+    config.value_label_type === 'dim' ||
+    config.value_label_type === 'dboth'
   ) {
     if (dims.length === 0) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "Add a dimension or modify label type.",
+        title: 'Invalid Input.',
+        message: 'Add a dimension or modify label type.',
       });
     }
   }
   if (
-    config.target_label_type === "dim" ||
-    config.target_label_type === "dboth"
+    config.target_label_type === 'dim' ||
+    config.target_label_type === 'dboth'
   ) {
     if (dims.length === 0) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "Add a dimension or modify label type.",
+        title: 'Invalid Input.',
+        message: 'Add a dimension or modify label type.',
       });
     }
   }
-  var mesID = meas[0]["name"];
+  var mesID = meas[0]['name'];
   var mesData = data[0][mesID];
   var mesLabel =
-    meas[0]["label_short"] === undefined
-      ? meas[0]["label"]
-      : meas[0]["label_short"];
+    meas[0]['label_short'] === undefined
+      ? meas[0]['label']
+      : meas[0]['label_short'];
   var mesRendered =
     mesData.rendered === undefined ? mesData.value : mesData.rendered;
 
-  if (config.target_source === "second") {
+  if (config.target_source === 'second') {
     if (meas.length < 2) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "Add a second measure or modify target label source.",
+        title: 'Invalid Input.',
+        message: 'Add a second measure or modify target label source.',
       });
     }
-    var tarID = meas[1]["name"];
+    var tarID = meas[1]['name'];
     var tarData = data[0][tarID];
     var tarValue = tarData.value;
     var tarLabel =
-      meas[1]["label_short"] === undefined
-        ? meas[1]["label"]
-        : meas[1]["label_short"];
+      meas[1]['label_short'] === undefined
+        ? meas[1]['label']
+        : meas[1]['label_short'];
     var tarBase =
       tarData.rendered === undefined ? tarData.value : tarData.rendered;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? data[0][dimID].value
           : config.target_label_override;
     }
-  } else if (config.target_source === "first") {
-    if (config.viz_trellis_by === "row") {
+  } else if (config.target_source === 'first') {
+    if (config.viz_trellis_by === 'row') {
       viz.addError({
-        title: "Invalid Input.",
+        title: 'Invalid Input.',
         message:
-          "This option cannot be applied to a trellis. Please modify target label source.",
+          'This option cannot be applied to a trellis. Please modify target label source.',
       });
     }
     if (data.length < 2) {
       viz.addError({
-        title: "Invalid Input.",
-        message: "No value to target. Add a second row or modify label type.",
+        title: 'Invalid Input.',
+        message: 'No value to target. Add a second row or modify label type.',
       });
     }
     var tarData = data[1][mesID];
     var tarValue = tarData.value;
     var tarBase =
-      tarData.rendered === undefined || tarData.rendered === ""
+      tarData.rendered === undefined || tarData.rendered === ''
         ? tarValue
         : tarData.rendered;
     var tarLabel = mesLabel;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? data[1][dimID].value
           : config.target_label_override;
     }
-  } else if (config.target_source === "override") {
+  } else if (config.target_source === 'override') {
     if (
       config.target_value_override === undefined ||
-      config.target_value_override === ""
+      config.target_value_override === ''
     ) {
       viz.addError({
-        title: "Invalid Input.",
+        title: 'Invalid Input.',
         message:
-          "No target override. Add an override value or modify target label source.",
+          'No target override. Add an override value or modify target label source.',
       });
     }
     var tarValue = parseFloat(config.target_value_override);
@@ -268,13 +268,13 @@ function processData(data, queryResponse, config, viz) {
     var tarLabel = config.target_label_override;
     var tarRendered =
       config.target_value_format === undefined ||
-      config.target_value_format === ""
+      config.target_value_format === ''
         ? tarBase
         : SSF.format(config.target_value_format, tarValue);
     if (dims.length > 0) {
       var tarDim =
         config.target_label_override === undefined ||
-        config.target_label_override === ""
+        config.target_label_override === ''
           ? data[0][dimID].value
           : config.target_label_override;
     }
@@ -285,17 +285,17 @@ function processData(data, queryResponse, config, viz) {
     value_links: mesData.links,
     value_label:
       config.value_label_override === undefined ||
-      config.value_label_override === ""
+      config.value_label_override === ''
         ? mesLabel
         : config.value_label_override,
     value_rendered:
-      config.value_formatting === undefined || config.value_formatting === ""
+      config.value_formatting === undefined || config.value_formatting === ''
         ? mesRendered
         : SSF.format(config.value_formatting, mesData.value),
     value_dimension:
       dims.length > 0
         ? config.value_label_override === undefined ||
-          config.value_label_override === ""
+          config.value_label_override === ''
           ? data[0][dimID].value
           : config.value_label_override
         : null,
@@ -303,371 +303,372 @@ function processData(data, queryResponse, config, viz) {
     target_rendered: tarRendered,
     target_label:
       config.target_label_override === undefined ||
-      config.target_label_override === ""
+      config.target_label_override === ''
         ? tarLabel
         : config.target_label_override,
     target_dimension: tarDim,
   };
   return chunk;
 }
+
 // const formattedValue = dataPoints[0].valueFormat === "" ? dataPoints[0].formattedValue : SSF.format(dataPoints[0].valueFormat, dataPoints[0].value)
 looker.plugins.visualizations.add({
-  id: "gauge",
-  label: "Gauge Visualization",
+  id: 'gauge',
+  label: 'Gauge Visualization',
   primary: true,
   options: {
     // PLOT ADVANCED
     arm_length: {
-      type: "number",
-      label: "Arm Length",
+      type: 'number',
+      label: 'Arm Length',
       default: 9,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: 0,
       max: 50,
       step: 0.5,
       order: 200,
-      display_size: "half",
+      display_size: 'half',
     },
     arm_weight: {
-      type: "number",
-      label: "Thickness",
+      type: 'number',
+      label: 'Thickness',
       default: 48,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: 0,
       max: 100,
       order: 300,
-      display_size: "half",
+      display_size: 'half',
     },
     spinner_length: {
-      type: "number",
-      label: "Pointer Length",
+      type: 'number',
+      label: 'Pointer Length',
       default: 153,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: 0,
       max: 200,
       order: 400,
-      display_size: "half",
+      display_size: 'half',
     },
     spinner_weight: {
-      type: "number",
-      label: "Thickness",
-      section: "Plot",
-      display: "range",
+      type: 'number',
+      label: 'Thickness',
+      section: 'Plot',
+      display: 'range',
       min: 0,
       max: 100,
       default: 25,
       order: 500,
-      display_size: "half",
+      display_size: 'half',
     },
     target_length: {
-      type: "number",
-      label: "Target Length",
+      type: 'number',
+      label: 'Target Length',
       default: 10,
-      section: "Target",
-      display: "range",
+      section: 'Target',
+      display: 'range',
       min: 0,
       max: 30,
       order: 600,
-      display_size: "third",
+      display_size: 'third',
     },
     target_gap: {
-      type: "number",
-      label: "Dash Gap",
+      type: 'number',
+      label: 'Dash Gap',
       default: 10,
-      section: "Target",
-      display: "range",
+      section: 'Target',
+      display: 'range',
       min: 0,
       max: 30,
       order: 610,
-      display_size: "third",
+      display_size: 'third',
     },
     target_weight: {
-      type: "number",
-      label: "Thickness",
+      type: 'number',
+      label: 'Thickness',
       default: 8,
-      section: "Target",
-      display: "range",
+      section: 'Target',
+      display: 'range',
       min: 0,
       max: 100,
       order: 700,
-      display_size: "third",
+      display_size: 'third',
     },
 
     // PLOT
     range_min: {
-      type: "number",
-      label: "Range Min Override",
-      section: "Plot",
+      type: 'number',
+      label: 'Range Min Override',
+      section: 'Plot',
       order: 30,
       default: 0,
-      display_size: "half",
+      display_size: 'half',
     },
     range_max: {
-      type: "number",
-      label: "Range Max Override",
-      section: "Plot",
+      type: 'number',
+      label: 'Range Max Override',
+      section: 'Plot',
       order: 31,
       default: DEFAULT_MAX_RANGE,
-      display_size: "half",
+      display_size: 'half',
     },
     value_label_type: {
-      type: "string",
-      label: "Value Label Type",
-      display: "select",
-      section: "Value",
+      type: 'string',
+      label: 'Value Label Type',
+      display: 'select',
+      section: 'Value',
       values: [
-        { "Value and Measure Label": "both" },
-        { "Value and Dimension": "dboth" },
-        { "Only Value": "value" },
-        { "Only Label": "label" },
-        { "Only Dimension": "dim" },
-        { None: "none" },
+        {'Value and Measure Label': 'both'},
+        {'Value and Dimension': 'dboth'},
+        {'Only Value': 'value'},
+        {'Only Label': 'label'},
+        {'Only Dimension': 'dim'},
+        {None: 'none'},
       ],
-      default: "both",
+      default: 'both',
       order: 40,
     },
     value_label_font: {
-      type: "number",
-      label: "Value Label Font Size",
-      section: "Value",
+      type: 'number',
+      label: 'Value Label Font Size',
+      section: 'Value',
       default: 12,
       order: 50,
     },
     value_formatting: {
-      type: "string",
-      label: "Value Formatting Override",
-      section: "Value",
+      type: 'string',
+      label: 'Value Formatting Override',
+      section: 'Value',
       order: 51,
     },
     value_label_override: {
-      type: "string",
-      label: "Value Label Override",
-      section: "Value",
+      type: 'string',
+      label: 'Value Label Override',
+      section: 'Value',
       order: 60,
     },
     value_label_padding: {
-      type: "number",
-      label: "Value Label Padding",
+      type: 'number',
+      label: 'Value Label Padding',
       default: 45,
-      section: "Value",
-      display: "range",
+      section: 'Value',
+      display: 'range',
       min: 0,
       max: 120,
       order: 70,
     },
     target_source: {
-      type: "string",
-      label: "Target Source",
-      display: "select",
-      section: "Target",
+      type: 'string',
+      label: 'Target Source',
+      display: 'select',
+      section: 'Target',
       values: [
-        { "First Measure": "first" },
-        { "Second Measure": "second" },
-        { Override: "override" },
-        { "No Target": "off" },
+        {'First Measure': 'first'},
+        {'Second Measure': 'second'},
+        {Override: 'override'},
+        {'No Target': 'off'},
       ],
-      default: "off",
+      default: 'off',
       order: 80,
     },
     target_label_type: {
-      type: "string",
-      label: "Target Label Type",
-      display: "select",
-      section: "Target",
+      type: 'string',
+      label: 'Target Label Type',
+      display: 'select',
+      section: 'Target',
       values: [
-        { "Value and Label": "both" },
-        { "Only Value": "value" },
-        { "Only Label": "label" },
-        { "Value and Dimension": "dboth" },
-        { "Only Dimension": "dim" },
-        { "No Label": "nolabel" },
+        {'Value and Label': 'both'},
+        {'Only Value': 'value'},
+        {'Only Label': 'label'},
+        {'Value and Dimension': 'dboth'},
+        {'Only Dimension': 'dim'},
+        {'No Label': 'nolabel'},
       ],
-      default: "both",
+      default: 'both',
       order: 90,
     },
     target_label_font: {
-      type: "number",
-      label: "Target Label Font Size",
-      section: "Target",
+      type: 'number',
+      label: 'Target Label Font Size',
+      section: 'Target',
       default: 3,
       order: 100,
     },
     target_label_override: {
-      type: "string",
-      label: "Target Label Override",
-      section: "Target",
+      type: 'string',
+      label: 'Target Label Override',
+      section: 'Target',
       order: 120,
     },
     target_value_override: {
-      type: "string",
-      label: "Target Value Override",
-      section: "Target",
+      type: 'string',
+      label: 'Target Value Override',
+      section: 'Target',
       order: 110,
     },
     target_value_format: {
-      type: "string",
-      label: "Target Value Formatting",
-      section: "Target",
+      type: 'string',
+      label: 'Target Value Formatting',
+      section: 'Target',
       order: 120,
     },
     label_font_size: {
-      type: "number",
-      label: "Range Label Font Size",
-      section: "Plot",
+      type: 'number',
+      label: 'Range Label Font Size',
+      section: 'Plot',
       default: 3,
       order: 140,
     },
     range_formatting: {
-      type: "string",
-      label: "Range Label Value Formatting",
-      section: "Plot",
+      type: 'string',
+      label: 'Range Label Value Formatting',
+      section: 'Plot',
       order: 150,
     },
     spinner_type: {
-      type: "string",
-      label: "Spinner Type",
-      display: "select",
-      section: "Plot",
+      type: 'string',
+      label: 'Spinner Type',
+      display: 'select',
+      section: 'Plot',
       values: [
-        { Needle: "needle" },
-        { Spinner: "spinner" },
-        { Automotive: "auto" },
-        { Inner: "inner" },
+        {Needle: 'needle'},
+        {Spinner: 'spinner'},
+        {Automotive: 'auto'},
+        {Inner: 'inner'},
       ],
-      default: "needle",
+      default: 'needle',
       order: 151,
     },
 
     // STYLE
     fill_color: {
-      type: "string",
-      label: "Gauge Fill Color",
-      section: "Style",
-      display: "color",
-      default: "#0092E5",
+      type: 'string',
+      label: 'Gauge Fill Color',
+      section: 'Style',
+      display: 'color',
+      default: '#0092E5',
       order: 10,
     },
     background_color: {
-      type: "string",
-      label: "Background Color",
-      default: "#CECECE",
-      section: "Style",
-      display: "color",
+      type: 'string',
+      label: 'Background Color',
+      default: '#CECECE',
+      section: 'Style',
+      display: 'color',
       order: 20,
     },
     spinner_color: {
-      type: "string",
-      label: "Pointer Color",
-      default: "#282828",
-      section: "Style",
-      display: "color",
+      type: 'string',
+      label: 'Pointer Color',
+      default: '#282828',
+      section: 'Style',
+      display: 'color',
       order: 30,
     },
     range_color: {
-      type: "string",
-      label: "Range Label Color",
-      default: "#282828",
-      section: "Style",
-      display: "color",
+      type: 'string',
+      label: 'Range Label Color',
+      default: '#282828',
+      section: 'Style',
+      display: 'color',
       order: 40,
     },
     gauge_fill_type: {
-      type: "string",
-      label: "Gauge Fill Type",
-      display: "select",
-      section: "Style",
+      type: 'string',
+      label: 'Gauge Fill Type',
+      display: 'select',
+      section: 'Style',
       values: [
-        { Progress: "progress" },
-        { "Progress Segment": "progress-gradient" },
-        { Segment: "segment" },
+        {Progress: 'progress'},
+        {'Progress Segment': 'progress-gradient'},
+        {Segment: 'segment'},
       ],
-      default: "progress",
+      default: 'progress',
       order: 1,
     },
     fill_colors: {
-      type: "array",
-      label: "Gauge Segment Colors",
-      section: "Style",
-      default: ["#7FCDAE", "#ffed6f", "#EE7772"],
-      display: "colors",
+      type: 'array',
+      label: 'Gauge Segment Colors',
+      section: 'Style',
+      default: ['#7FCDAE', '#ffed6f', '#EE7772'],
+      display: 'colors',
       order: 11,
     },
     viz_trellis_by: {
-      type: "string",
-      label: "Trellis By",
-      display: "select",
-      section: "Plot",
-      values: [{ None: "none" }, { Row: "row" }, { Pivot: "pivot" }],
-      default: "none",
+      type: 'string',
+      label: 'Trellis By',
+      display: 'select',
+      section: 'Plot',
+      values: [{None: 'none'}, {Row: 'row'}, {Pivot: 'pivot'}],
+      default: 'none',
       order: 0,
     },
     trellis_rows: {
-      type: "number",
-      label: "Trellis Rows",
-      section: "Plot",
-      display_size: "half",
+      type: 'number',
+      label: 'Trellis Rows',
+      section: 'Plot',
+      display_size: 'half',
       default: 2,
       order: 1,
     },
     trellis_cols: {
-      type: "number",
-      label: "Trellis Columns",
-      section: "Plot",
-      display_size: "half",
+      type: 'number',
+      label: 'Trellis Columns',
+      section: 'Plot',
+      display_size: 'half',
       default: 2,
       order: 2,
     },
     angle: {
-      type: "number",
-      label: "Radial Gauge Angle",
+      type: 'number',
+      label: 'Radial Gauge Angle',
       default: 90,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: 10,
       max: 170,
       order: 10,
     },
     cutout: {
-      type: "number",
-      label: "Radial Gauge Cutout",
+      type: 'number',
+      label: 'Radial Gauge Cutout',
       default: 30,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: 0,
       max: 100,
       order: 20,
     },
     range_x: {
-      type: "number",
-      label: "Range Width",
+      type: 'number',
+      label: 'Range Width',
       default: 1,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: -2,
       max: 4,
       step: 0.1,
       order: 800,
     },
     range_y: {
-      type: "number",
-      label: "Range Height",
+      type: 'number',
+      label: 'Range Height',
       default: 1,
-      section: "Plot",
-      display: "range",
+      section: 'Plot',
+      display: 'range',
       min: -2,
       max: 4,
       step: 0.1,
       order: 900,
     },
     target_label_padding: {
-      type: "number",
-      label: "Target Label Padding",
+      type: 'number',
+      label: 'Target Label Padding',
       default: 1.06,
-      section: "Target",
-      display: "range",
+      section: 'Target',
+      display: 'range',
       min: 1,
       max: 2,
       step: 0.01,
@@ -677,7 +678,7 @@ looker.plugins.visualizations.add({
   // Set up the initial state of the visualization
   create: function (element, config) {
     this.container = element;
-    this.container.className = "gauge-vis";
+    this.container.className = 'gauge-vis';
     // this.chart = ReactDOM.render(
     //    	<RadialGauge />,
     //    	this.container
@@ -685,7 +686,7 @@ looker.plugins.visualizations.add({
   },
   // Render in response to the data or settings changing
   updateAsync: function (data, element, config, queryResponse, details, done) {
-    var margin = { top: 20, right: 20, bottom: 20, left: 20 },
+    var margin = {top: 20, right: 20, bottom: 20, left: 20},
       width = element.clientWidth,
       height = element.clientHeight;
 
@@ -694,12 +695,12 @@ looker.plugins.visualizations.add({
 
     if (data.length < 1) {
       // Issue identified where viz would not change with table calc filters
-      // need to supply the container with something new if we fail early and 
-      // don't make it to the inteded render function. 
+      // need to supply the container with something new if we fail early and
+      // don't make it to the inteded render function.
       // https://looker.atlassian.net/browse/DX-5779
       this.addError({
-        title: "No Results",
-      })
+        title: 'No Results',
+      });
       done();
       return;
     }
@@ -710,19 +711,19 @@ looker.plugins.visualizations.add({
       queryResponse.fields.measure_like.length > 2
     ) {
       this.addError({
-        title: "Invalid Input.",
-        message: "This chart accepts up to 1 dimension and 2 measures.",
+        title: 'Invalid Input.',
+        message: 'This chart accepts up to 1 dimension and 2 measures.',
       });
       return;
     }
 
     if (
-      config.viz_trellis_by === "pivot" &&
+      config.viz_trellis_by === 'pivot' &&
       queryResponse.pivots === undefined
     ) {
       this.addError({
-        title: "Invalid Input.",
-        message: "Add pivots or change trellis type.",
+        title: 'Invalid Input.',
+        message: 'Add pivots or change trellis type.',
       });
       return;
     }
@@ -737,7 +738,7 @@ looker.plugins.visualizations.add({
     // Extract value, value_label, target, target_label as a chunk
     let chunk;
     let chunk_multiples = [];
-    if (config.viz_trellis_by === "row") {
+    if (config.viz_trellis_by === 'row') {
       let limit = Math.min(
         config.trellis_cols * config.trellis_rows,
         data.length
@@ -748,7 +749,7 @@ looker.plugins.visualizations.add({
           chunk_multiples.push(chunk);
         }
       });
-    } else if (config.viz_trellis_by === "pivot") {
+    } else if (config.viz_trellis_by === 'pivot') {
       let limit = Math.min(
         config.trellis_cols * config.trellis_rows,
         queryResponse.pivots.length
@@ -768,19 +769,19 @@ looker.plugins.visualizations.add({
         Math.ceil(chunk.value),
         chunk.target ? Math.ceil(chunk.target) : 0
       );
-      var len = (num + "").length;
+      var len = (num + '').length;
       var fac = Math.pow(10, len - 1);
       let default_max = Math.ceil(num / fac) * fac;
-      config.range_max = default_max
+      config.range_max = default_max;
     }
     var viz = this;
-    if (config.viz_trellis_by === "none") {
+    if (config.viz_trellis_by === 'none') {
       viz.radialProps = {
         cleanup: `gauge`,
         trellis_by: config.viz_trellis_by,
         w: width,
         h: height,
-        limiting_aspect: width < height ? "vw" : "vh",
+        limiting_aspect: width < height ? 'vw' : 'vh',
         margin: margin,
         style: config.style,
         angle: config.angle,
@@ -819,7 +820,7 @@ looker.plugins.visualizations.add({
         target_length: config.target_length, // TARGET SETTINGS
         target_gap: config.target_gap,
         target_weight: config.target_weight,
-        target_background: "#282828",
+        target_background: '#282828',
         target_source: config.target_source,
 
         value_label_type: config.value_label_type, // LABEL SETTINGS
@@ -838,7 +839,7 @@ looker.plugins.visualizations.add({
     } else {
       chunk_multiples.forEach(function (d, i) {
         let limit =
-          config.viz_trellis_by === "row"
+          config.viz_trellis_by === 'row'
             ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
             : Math.min(
                 config.trellis_cols * config.trellis_rows,
@@ -850,7 +851,7 @@ looker.plugins.visualizations.add({
           trellis_limit: limit,
           w: width / config.trellis_cols, // GAUGE SETTINGS
           h: height / config.trellis_rows,
-          limiting_aspect: width < height ? "vw" : "vh",
+          limiting_aspect: width < height ? 'vw' : 'vh',
           margin: margin,
           style: config.style,
           angle: config.angle,
@@ -886,7 +887,7 @@ looker.plugins.visualizations.add({
           target_length: config.target_length, // TARGET SETTINGS
           target_gap: config.target_gap,
           target_weight: config.target_weight,
-          target_background: "#282828",
+          target_background: '#282828',
           target_source: config.target_source,
 
           value_label_type: config.value_label_type, // LABEL SETTINGS
