@@ -136,8 +136,10 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     value_dimension:
       config.value_label_override === undefined ||
       config.value_label_override === ''
-        ? pivotKey
-        : config.value_label_override,
+        ? str.replace(
+          /(^| +)[!-\/:-@\[-`\{-~]*([^ ]*?)[!-\/:-@\[-`\{-~]*(?=\s|$)/gi,
+          pivotKey
+        ): config.value_label_override,
     target: tarValue,
     target_rendered: tarRendered,
     target_label:
