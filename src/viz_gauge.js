@@ -5,6 +5,8 @@ import SSF from 'ssf';
 
 const DEFAULT_MAX_RANGE = null;
 
+const LEADING_TRAILING_SPECIAL_CHARS_REGEX = /(^| +)[!-\/:-@\[-`\{-~]*([^ ]*?)[!-\/:-@\[-`\{-~]*(?=\s|$)/gi;
+
 function processPivot(data, queryResponse, config, viz, pivotKey) {
   data = data.length === undefined ? [data] : data;
   let dims, meas;
@@ -136,7 +138,7 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     value_dimension:
       config.value_label_override === undefined ||
       config.value_label_override === ''
-        ? pivotKey.replace(/(^| +)[!-\/:-@\[-`\{-~]*([^ ]*?)[!-\/:-@\[-`\{-~]*(?=\s|$)/gi, '$1$2')
+        ? trimTrailingLeadingSpecialChars(pivotKey)
         : config.value_label_override,
     target: tarValue,
     target_rendered: tarRendered,
@@ -148,6 +150,10 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     target_dimension: tarDim,
   };
   return chunk;
+}
+
+function trimTrailingLeadingSpecialChars(str) {
+  return str.replace(LEADING_TRAILING_SPECIAL_CHARS_REGEX, '$1$2');
 }
 
 function processData(data, queryResponse, config, viz) {
