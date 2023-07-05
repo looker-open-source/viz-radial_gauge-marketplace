@@ -8,33 +8,53 @@ Great! Marketplace content -- including visualizations -- were designed for cont
 
 #### Quickstart Dev Instructions
 
-1.  **Install Dependencies.**
+1. **Install Dependencies.**
 
-    Using yarn, install all dependencies
+   Using yarn, install all dependencies
 
-    ```
-    yarn
-    ```
+   ```
+   yarn
+   ```
 
-2.  **Make changes to the source code**
+2. **Make changes to the source code**
 
-3.  **Compile your code**
+3. **Compile your code**
 
-    You need to compile your react code, let's run:
+   You need to compile your react code, let's run:
 
-    ```
-    yarn build
-    ```
+   ```
+   yarn build
+   ```
 
-    Recommended: Webpack can detect changes and build automatically
+   or
 
-    ```
-    yarn start
-    ```
+   ```
+   bin/build
+   ```
 
-    Your compiled code can be found in this repo.
+   Recommended: Webpack can detect changes and build automatically
 
-**`radialgauge.js`**: This visualization's minified distribution file.
+   ```
+   yarn start
+   ```
+
+   Your compiled code can be found in this repo.
+
+4. Run unit tests.
+
+   Use either:
+
+   ```
+   yarn test
+   ```
+
+   Or:
+
+   ```
+   bin/test
+   ```
+
+   **`radialgauge.js`**: This visualization's minified distribution file.
 
 **`LICENSE`**: Looker's Marketplace content License file.
 

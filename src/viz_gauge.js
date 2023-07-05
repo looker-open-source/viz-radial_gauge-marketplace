@@ -2,10 +2,9 @@ import RadialGauge from './radial_gauge';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SSF from 'ssf';
+import {trimSpecialCharacters} from './string';
 
 const DEFAULT_MAX_RANGE = null;
-
-const LEADING_TRAILING_SPECIAL_CHARS_REGEX = /(^| +)[!-\/:-@\[-`\{-~]*([^ ]*?)[!-\/:-@\[-`\{-~]*(?=\s|$)/gi;
 
 function processPivot(data, queryResponse, config, viz, pivotKey) {
   data = data.length === undefined ? [data] : data;
@@ -138,7 +137,7 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     value_dimension:
       config.value_label_override === undefined ||
       config.value_label_override === ''
-        ? trimTrailingLeadingSpecialChars(pivotKey)
+        ? trimSpecialCharacters(pivotKey)
         : config.value_label_override,
     target: tarValue,
     target_rendered: tarRendered,
@@ -150,10 +149,6 @@ function processPivot(data, queryResponse, config, viz, pivotKey) {
     target_dimension: tarDim,
   };
   return chunk;
-}
-
-function trimTrailingLeadingSpecialChars(str) {
-  return str.replace(LEADING_TRAILING_SPECIAL_CHARS_REGEX, '$1$2');
 }
 
 function processData(data, queryResponse, config, viz) {
