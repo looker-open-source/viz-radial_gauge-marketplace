@@ -7,7 +7,8 @@
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server --open",
     "watch": "webpack --config webpack.config.js --watch --progress",
-    "format": "prettier --ignore-path .gitignore --write '**/*.js'"
+    "format": "prettier --ignore-path .gitignore --write '**/*.js'",
+    "test": "jest"
   },
   "author": "Noah MacDonald <noahmac@google.com>",
   "private": true,
@@ -43,6 +44,7 @@
     "js-yaml": "3.13.1"
   },
   "devDependencies": {
+    "jest": "^29.6.0",
     "prettier": "^2.8.8"
   }
 }
