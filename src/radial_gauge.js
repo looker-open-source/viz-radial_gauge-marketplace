@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 import SSF from 'ssf';
 // import { configs } from 'eslint-plugin-prettier';
+import {mapBetween} from './math';
+import {getLabel} from './string';
 
 const RadialGauge = props => {
   useEffect(() => {
@@ -9,12 +11,6 @@ const RadialGauge = props => {
   }, [props]);
   return <div className="viz" />;
 };
-
-function mapBetween(currentNum, minAllowed, maxAllowed, min, max) {
-  return (
-    ((maxAllowed - minAllowed) * (currentNum - min)) / (max - min) + minAllowed
-  );
-}
 
 function wrap(text, width) {
   text.each(function () {
@@ -49,20 +45,6 @@ function wrap(text, width) {
       }
     }
   });
-}
-
-function getLabel(rule, value, label, override) {
-  // console.log(rule, value, label, override)
-  label = override === '' ? label : override;
-  if (rule === 'value') {
-    return `${value}`;
-  } else if (rule === 'label') {
-    return `${label}`;
-  } else if (rule === 'both') {
-    return `${value} ${label}`;
-  } else if (rule === 'none') {
-    return ``;
-  }
 }
 
 const drawRadial = props => {
