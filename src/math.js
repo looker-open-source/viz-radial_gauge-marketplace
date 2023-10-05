@@ -11,9 +11,7 @@
 export function mapBetween(n, minAllowed, maxAllowed, min, max) {
   // TODO: This function has been refactored and moved into this file as is
   // It has yet to be checked for accuracy and validation has to be added.
-  const numerator = ((maxAllowed - minAllowed) * (n - min));
-  const denominator = (max - min);
-  return (
-    numerator / denominator + minAllowed
-  );
+  const numerator = (maxAllowed - minAllowed) * (n - min);
+  const denominator = max - min;
+  return numerator / denominator + minAllowed;
 }

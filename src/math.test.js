@@ -1,4 +1,4 @@
-import { mapBetween } from './math';
+import {mapBetween} from './math';
 
 describe('mapBetween', () => {
   test('should map the number within the allowable range', () => {

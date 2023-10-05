@@ -28,7 +28,7 @@ export function trimSpecialCharacters(
  */
 export function getLabel(rule, value, label, override) {
   label = override || label;
-  switch(rule) {
+  switch (rule) {
     case 'value':
       return `${value}`;
     case 'label':
