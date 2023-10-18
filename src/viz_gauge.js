@@ -699,10 +699,10 @@ looker.plugins.visualizations.add({
       // need to supply the container with something new if we fail early and
       // don't make it to the inteded render function.
       // https://looker.atlassian.net/browse/DX-5779
+      this.chart = ReactDOM.render(<></>, this.container);
       this.addError({
         title: 'No Results',
       });
-      done();
       return;
     }
 
