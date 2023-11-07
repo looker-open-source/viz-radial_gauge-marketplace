@@ -5,7 +5,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 var webpackConfig = {
   mode: 'production',
   entry: {
-    radialgauge: './src/viz_gauge.js',
+    radialgauge: './src/radial_gauge_container.js',
   },
   devServer: {
     contentBase: './dist',

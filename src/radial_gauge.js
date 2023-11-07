@@ -1,9 +1,7 @@
 import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 import SSF from 'ssf';
-// import { configs } from 'eslint-plugin-prettier';
-import {mapBetween} from './math';
-import {getLabel} from './string';
+import {mapBetween} from './functions/math';
 
 const RadialGauge = props => {
   useEffect(() => {
@@ -77,12 +75,9 @@ const drawRadial = props => {
     d3.selectAll(`.viz > *`).remove();
     d3.selectAll(`.${props.cleanup}`).remove();
     d3.selectAll(`[class^='subgauge']`).remove();
-    // console.log(d3.selectAll(`class^='subgauge'`))
   } else {
-    // d3.select(`.viz > *`).remove();
     d3.selectAll(`.gauge`).remove();
     d3.selectAll(`.${props.cleanup}`).remove();
-    // console.log(props.trellis_limit, d3.selectAll(`[class^='subgauge']`).size())
     var overfill = d3.range(
       props.trellis_limit,
       d3.selectAll(`[class^='subgauge']`).size() + 1

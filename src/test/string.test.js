@@ -1,4 +1,4 @@
-import {getLabel, trimSpecialCharacters} from './string';
+import {getLabel, trimSpecialCharacters} from '../string';
 
 describe('trimSpecialCharacters', () => {
   test('should trim leading special characters', () => {
