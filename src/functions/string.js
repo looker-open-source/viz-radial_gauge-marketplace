@@ -1,7 +1,7 @@
 /** Regular expression for the special characters that are trimmed by
  * default from a string. */
 const LEADING_TRAILING_SPECIAL_CHARS_REGEX =
-  /(^| +)[!-\/:-@\[-`\{-~]*([^ ]*?)[!-\/:-@\[-`\{-~]*(?=\s|$)/gi;
+  /(^| +)[!-/:-@[-`{-~]*([^ ]*?)[!-/:-@[-`{-~]*(?=\s|$)/gi;
 
 /**
  * Trims leading and trailing special characters from the string.
@@ -28,7 +28,7 @@ export function trimSpecialCharacters(
  */
 export function getLabel(rule, value, label, override) {
   label = override || label;
-  switch(rule) {
+  switch (rule) {
     case 'value':
       return `${value}`;
     case 'label':
