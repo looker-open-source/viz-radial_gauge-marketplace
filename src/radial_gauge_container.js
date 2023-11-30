@@ -1,9 +1,9 @@
 import {vizUpdateAsync} from './functions/viz_update_async';
 import {plotConfig} from './constants/plot_config';
 
-export function vizCreate(element) {
-  this.container = element;
-  this.container.className = 'gauge-vis';
+export function vizCreate(viz, element) {
+  viz.container = element;
+  viz.container.className = 'gauge-vis';
 }
 
 // eslint-disable-next-line no-undef
@@ -13,12 +13,11 @@ looker.plugins.visualizations.add({
   primary: true,
   options: plotConfig,
   // Set up the initial state of the visualization
-  create: function vizCreate(element) {
-    this.container = element;
-    this.container.className = 'gauge-vis';
+  create: function (element) {
+    vizCreate(this, element);
   },
   // Render in response to the data or settings changing
   updateAsync: function (data, element, config, queryResponse, details, done) {
-    vizUpdateAsync(data, element, config, queryResponse, details, done);
+    vizUpdateAsync(this, data, element, config, queryResponse, details, done);
   },
 });

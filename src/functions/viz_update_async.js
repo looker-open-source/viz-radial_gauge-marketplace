@@ -3,12 +3,12 @@ import {processPivot} from './process_pivot';
 import {handleVizErrors} from './viz_error_handler';
 import {React} from 'react';
 import {ReactDOM} from 'react-dom';
-import {RadialGauge} from './radial_gauge';
+import {RadialGauge} from '../radial_gauge';
 
 const DEFAULT_MAX_RANGE = null;
-var radialGaugeViz;
 
 export function vizUpdateAsync(
+  radialGaugeViz,
   data,
   element,
   config,
@@ -20,8 +20,6 @@ export function vizUpdateAsync(
     width = element.clientWidth,
     height = element.clientHeight;
 
-  // Get a copy of the viz object
-  radialGaugeViz = this;
   // Handle any erros with viz data and config
   handleVizErrors(radialGaugeViz, data, queryResponse, config);
 
