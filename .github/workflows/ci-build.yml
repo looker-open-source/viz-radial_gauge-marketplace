@@ -1,4 +1,4 @@
-name: ci-build
+name: ci-workflow
 on: 
   push:
     branches:
@@ -7,6 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  ci-build-job:
     uses: looker-open-source/reusable-actions/.github/workflows/marketplace-viz-ci-build.yml@main
       
