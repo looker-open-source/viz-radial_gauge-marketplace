@@ -11,10 +11,8 @@ var webpackConfig = {
     contentBase: './dist',
   },
   output: {
-    filename: '[name]_v2.js',
-    path: __dirname,
-    library: '[name]',
-    libraryTarget: 'umd',
+    filename: 'bundle.js',
+    path: path.join(__dirname,'/dist'),
   },
   resolve: {
     extensions: ['.js'],
