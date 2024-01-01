@@ -1,73 +1,40 @@
 # Radial Gauge Visualization
 
-### What if I find an error? Suggestions for improvements?
+### What if I find an error or want to suggest improvements?
 
-Great! Marketplace content -- including visualizations -- were designed for continuous improvement through the help of the entire Looker community and we'd love your input. To report an error or improvement recommendation, please get in touch at help.looker.com to submit a request. Please be as detailed as possible in your explanation and we'll address it as quick as we can.
+We welcome your contributions to this open source visualization with a pull request. Please reach out to Google Cloud support to report an error or suggest an improvement. You can also extend this visualization for your own use case.
 
-### Interested in extending the visualization for your own use case?
+### Local development
 
-#### Quickstart Dev Instructions
+You must have Node v16 and `yarn` installed.
 
-1. **Install Dependencies.**
+#### Install Dependencies
 
-   Using yarn, install all dependencies
+Call `yarn` to  install all dependencies, includes React.
 
-   ```
-   yarn
-   ```
+```
+yarn
+```
 
-2. **Make changes to the source code**
+#### Build javascript
 
-3. **Compile your code**
+Run `yarn build` to bundle the javascript. The resulting minified bundle.js will be in the `dist` directory.
 
-   You need to compile your react code, let's run:
+```
+yarn build
+```
 
-   ```
-   yarn build
-   ```
+#### Local testing and other commands
 
-   or
+Check package.json for additional commands.
 
-   ```
-   bin/build
-   ```
+#### Commit title format
+Commit titles on `master` branch follow [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/#summary) message spec. Your commit title must prefix one of 3 types and an optional `!` with the format `TYPE: commit title goes here`.
+* `fix` - a commit of the type fix patches a bug (correlates with PATCH in Semantic Versioning). `fix: Correct number formatting`
+* `feat` - a commit of the type feat introduces a new feature (correlates with MINOR in Semantic Versioning). `feat: Add column sorting`
+* `chore` - a commit of the type chore does not affect viz functionality (corresponds with no change in Semantic Versioning). `chore: Update build process`
+* Append an `!` exclamation point to the type if it is a breaking change. `fix!: ...`
 
-   Recommended: Webpack can detect changes and build automatically
+#### Release management
 
-   ```
-   yarn start
-   ```
-
-   Your compiled code can be found in this repo.
-
-4. Run unit tests.
-
-   Use either:
-
-   ```
-   yarn test
-   ```
-
-   Or:
-
-   ```
-   bin/test
-   ```
-
-   **`radialgauge.js`**: This visualization's minified distribution file.
-
-**`LICENSE`**: Looker's Marketplace content License file.
-
-**`manifest.lkml`**: Looker's external dependencies configuration file. The visualization object is defined here.
-
-**`marketplace.json`**: A JSON file containing information the marketplace installer uses to set up this project.
-
-**`/src`**: This directory will contain all of the visualization's source code.
-
-**`/node_modules`**: The directory where all of the modules of code that your project depends on (npm packages) are automatically installed.
-
-**`README.md`**: This! A text file containing useful reference information about this visualization.
-
-**`yarn.lock`**: [Yarn](https://yarnpkg.com/) is a package manager alternative to npm. This file serves essentially the same purpose as `package-lock.json`, just for a different package management system.
-
-**`.babelrc`**: A configuration file for the Babel jsx -> js compiler.
+This repo uses GitHub workflows with [release-please](https://github.com/googleapis/release-please) [action](https://github.com/google-github-actions/release-please-action) to create Github releases, determine versioning, and generate changelogs.
