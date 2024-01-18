@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable no-undef */
+import {useEffect} from 'react';
 import * as d3 from 'd3';
 import SSF from 'ssf';
 import {mapBetween} from './functions/math';

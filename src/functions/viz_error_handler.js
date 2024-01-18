@@ -1,3 +1,5 @@
+import ReactDOM from 'react-dom';
+
 export function handleVizErrors(radialGaugeViz, data, queryResponse, config) {
   // Clear any errors from previous updates
   radialGaugeViz.clearErrors();

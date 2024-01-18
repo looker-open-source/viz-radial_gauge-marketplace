@@ -1,9 +1,8 @@
+import ReactDOM from 'react-dom';
+
 import {processData} from './process_data';
 import {processPivot} from './process_pivot';
 import {handleVizErrors} from './viz_error_handler';
-import {React} from 'react';
-import {ReactDOM} from 'react-dom';
-import {RadialGauge} from '../radial_gauge';
 
 const DEFAULT_MAX_RANGE = null;
 
