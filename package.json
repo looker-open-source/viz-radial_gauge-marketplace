@@ -33,7 +33,7 @@
     "react": "^16.8.3",
     "react-dom": "^16.7.0",
     "ssf": "^0.10.2",
-    "styled-components": "^4.3.2",
+    "styled-components": "6.1.8",
     "to-string-loader": "^1.1.5",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.39.3",
