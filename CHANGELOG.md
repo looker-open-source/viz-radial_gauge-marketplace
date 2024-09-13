@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.0...v1.0.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* upgrades styled-components to latest version to remove @babel/traverse vulnerability ([#31](https://github.com/looker-open-source/viz-radial_gauge-marketplace/issues/31)) ([b71968a](https://github.com/looker-open-source/viz-radial_gauge-marketplace/commit/b71968afb326cd945114bbfe5f0858962fdf3c9b))
+
 ## 1.0.0 (2024-01-03)
 
 
