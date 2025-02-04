@@ -5,6 +5,7 @@
   "main": "",
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "build:legacy": "env NODE_OPTIONS='--openssl-legacy-provider' webpack --config webpack.config.js",
     "start": "webpack-dev-server --open",
     "watch": "webpack --config webpack.config.js --watch --progress",
     "format": "prettier --ignore-path .gitignore --write '**/*.js'",
@@ -35,13 +36,15 @@
     "ssf": "^0.10.2",
     "styled-components": "6.1.8",
     "to-string-loader": "^1.1.5",
-    "uglifyjs-webpack-plugin": "^1.2.5",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.7.1"
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "5.0.4"
   },
   "resolutions": {
-    "js-yaml": "3.13.1"
+    "js-yaml": "3.13.1",
+    "loader-utils": "2.0.4",
+    "json-schema": "0.4.0"
   },
   "devDependencies": {
     "jest": "^29.6.0",
