@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.1...v1.0.2) (2025-02-24)
+
+
+### Bug Fixes
+
+* **chore:** upgrading webpack version and updating config ([#45](https://github.com/looker-open-source/viz-radial_gauge-marketplace/issues/45)) ([acf9d11](https://github.com/looker-open-source/viz-radial_gauge-marketplace/commit/acf9d11e6e24e8a75e6ca71c9ef466b43d7db780))
+
 ## [1.0.1](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.0...v1.0.1) (2024-09-13)
 
 
