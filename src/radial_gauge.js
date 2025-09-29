@@ -48,6 +48,9 @@ function wrap(text, width) {
 }
 
 const drawRadial = props => {
+  if(!props.value || !props.range || !props.w || !props.h) {
+    return;
+  }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
   let radius = 0.4 * Math.min(props.w, props.h);
   let cutoutCalc = radius * (props.cutout / 100);
