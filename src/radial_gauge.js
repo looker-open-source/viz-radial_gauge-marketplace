@@ -48,7 +48,7 @@ function wrap(text, width) {
 }
 
 const drawRadial = props => {
-  if(isNan(props.value) || !props.range || !props.w || !props.h) {
+  if(Number.isNaN(props.value) || !props.range || !props.w || !props.h) {
     return;
   }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
