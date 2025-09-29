@@ -48,7 +48,7 @@ function wrap(text, width) {
 }
 
 const drawRadial = props => {
-  if(!props.value || !props.range || !props.w || !props.h) {
+  if(isNan(props.value) || !props.range || !props.w || !props.h) {
     return;
   }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
@@ -100,7 +100,8 @@ const drawRadial = props => {
     .style('overflow-x', 'hidden')
     .style('overflow-y', 'hidden')
     .style('position', 'fixed')
-    .attr('height', '100%');
+    .attr('height', '100%')
+    .attr('width', '100%')
   // append a fresh svg
   const svg = d3.select('.viz').append('svg');
   svg
