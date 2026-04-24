@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.2...v1.0.3) (2026-04-24)
+
+
+### Bug Fixes
+
+* **bug:** attr y transform error ([#57](https://github.com/looker-open-source/viz-radial_gauge-marketplace/issues/57)) ([a589053](https://github.com/looker-open-source/viz-radial_gauge-marketplace/commit/a5890535d5900f817c0cac67a9802c20d5a2de8b))
+
 ## [1.0.2](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.1...v1.0.2) (2025-02-24)
 
 
