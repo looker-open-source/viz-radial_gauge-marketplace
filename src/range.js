@@ -16,7 +16,7 @@ export function resolveRangeMax(chunk, config) {
   if (chunk.goal != null && chunk.goal > 0) {
     return chunk.goal;
   }
-  if (config.range_max) {
+  if (config.range_max != null) {
     return config.range_max;
   }
   const num = Math.max(
