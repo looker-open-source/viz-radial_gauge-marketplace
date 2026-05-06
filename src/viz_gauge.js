@@ -703,6 +703,7 @@ looker.plugins.visualizations.add({
       this.addError({
         title: 'No Results',
       });
+      done();
       return;
     }
 
@@ -778,6 +779,7 @@ looker.plugins.visualizations.add({
     var viz = this;
     if (config.viz_trellis_by === 'none') {
       viz.radialProps = {
+        done: done,
         cleanup: `gauge`,
         trellis_by: config.viz_trellis_by,
         w: width,
@@ -847,6 +849,7 @@ looker.plugins.visualizations.add({
                 queryResponse.pivots.length
               );
         viz.radialProps = {
+          done: done,
           cleanup: `subgauge${i}`,
           trellis_by: config.viz_trellis_by,
           trellis_limit: limit,
@@ -905,8 +908,5 @@ looker.plugins.visualizations.add({
         );
       });
     }
-
-    // We are done rendering! Let Looker know.
-    done();
   },
 });

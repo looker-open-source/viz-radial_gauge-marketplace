@@ -7,7 +7,15 @@ import {getLabel} from './string';
 
 const RadialGauge = props => {
   useEffect(() => {
-    drawRadial(props);
+    try {
+      drawRadial(props);
+    } catch (error) {
+      console.error('Radial Gauge Rendering Error:', error);
+    } finally {
+      if (props.done) {
+        props.done();
+      }
+    }
   }, [props]);
   return <div className="viz" />;
 };
@@ -48,7 +56,7 @@ function wrap(text, width) {
 }
 
 const drawRadial = props => {
-  if(Number.isNaN(props.value) || !props.range || !props.w || !props.h) {
+  if (Number.isNaN(props.value) || !props.range || !props.w || !props.h) {
     return;
   }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
@@ -101,7 +109,7 @@ const drawRadial = props => {
     .style('overflow-y', 'hidden')
     .style('position', 'fixed')
     .attr('height', '100%')
-    .attr('width', '100%')
+    .attr('width', '100%');
   // append a fresh svg
   const svg = d3.select('.viz').append('svg');
   svg
