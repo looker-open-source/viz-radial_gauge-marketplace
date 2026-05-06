@@ -20,8 +20,8 @@ export function resolveRangeMax(chunk, config) {
     return config.range_max;
   }
   const num = Math.max(
-    Math.ceil(chunk.value),
-    chunk.target ? Math.ceil(chunk.target) : 0
+    Math.ceil(chunk.value || 0),
+    Math.ceil(chunk.target || 0)
   );
   const len = (num + '').length;
   const fac = Math.pow(10, len - 1);
