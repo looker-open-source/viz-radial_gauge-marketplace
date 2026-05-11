@@ -716,6 +716,7 @@ looker.plugins.visualizations.add({
         title: 'Invalid Input.',
         message: 'This chart accepts up to 1 dimension and 2 measures.',
       });
+      done();
       return;
     }
 
@@ -727,6 +728,7 @@ looker.plugins.visualizations.add({
         title: 'Invalid Input.',
         message: 'Add pivots or change trellis type.',
       });
+      done();
       return;
     }
 
@@ -840,7 +842,25 @@ looker.plugins.visualizations.add({
         viz.container
       );
     } else {
-      chunk_multiples.forEach(function (d, i) {
+      // fallback done() in case chunk_multiples is totally empty during a trellis render
+      if (chunk_multiples.length === 0) {
+        done();
+        return;
+      }
+
+      // tracking mechanism to ensure done() is called only once, after all gauges finish
+      let gaugesFinished = 0;
+      const totalGauges = chunk_multiples.length;
+
+      const wrappedDone = () => {
+        gaugesFinished++;
+        if (gaugesFinished === totalGauges) {
+          done();
+        }
+      };
+
+      // map the properties to an array of components instead of calling ReactDOM.render in a loop
+      const trellisComponents = chunk_multiples.map(function (d, i) {
         let limit =
           config.viz_trellis_by === 'row'
             ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
@@ -848,12 +868,13 @@ looker.plugins.visualizations.add({
                 config.trellis_cols * config.trellis_rows,
                 queryResponse.pivots.length
               );
-        viz.radialProps = {
-          done: done,
+
+        const subGaugeProps = {
+          done: wrappedDone, // Use the wrapped tracker instead of the raw done()
           cleanup: `subgauge${i}`,
           trellis_by: config.viz_trellis_by,
           trellis_limit: limit,
-          w: width / config.trellis_cols, // GAUGE SETTINGS
+          w: width / config.trellis_cols,
           h: height / config.trellis_rows,
           limiting_aspect: width < height ? 'vw' : 'vh',
           margin: margin,
@@ -879,22 +900,18 @@ looker.plugins.visualizations.add({
           gauge_fill_type: config.gauge_fill_type,
           fill_colors: config.fill_colors,
           range_color: config.range_color,
-
-          spinner: config.spinner_length, // SPINNER SETTINGS
+          spinner: config.spinner_length,
           spinner_weight: config.spinner_weight,
           spinner_background: config.spinner_color,
           spinner_type: config.spinner_type,
-
-          arm: config.arm_length, // ARM SETTINGS
+          arm: config.arm_length,
           arm_weight: config.arm_weight,
-
-          target_length: config.target_length, // TARGET SETTINGS
+          target_length: config.target_length,
           target_gap: config.target_gap,
           target_weight: config.target_weight,
           target_background: '#282828',
           target_source: config.target_source,
-
-          value_label_type: config.value_label_type, // LABEL SETTINGS
+          value_label_type: config.value_label_type,
           value_label_font: config.value_label_font,
           value_label_padding: config.value_label_padding,
           target_label_type: config.target_label_type,
@@ -902,11 +919,16 @@ looker.plugins.visualizations.add({
           target_label_padding: config.target_label_padding,
           wrap_width: 100,
         };
-        viz.chart = ReactDOM.render(
-          <RadialGauge {...viz.radialProps} />,
-          viz.container
-        );
+
+        // render each gauge into the array using a unique key
+        return <RadialGauge key={`subgauge-${i}`} {...subGaugeProps} />;
       });
+
+      // render the entire array of components simultaneously in one React Fragment
+      viz.chart = ReactDOM.render(
+        <React.Fragment>{trellisComponents}</React.Fragment>,
+        viz.container
+      );
     }
   },
 });
