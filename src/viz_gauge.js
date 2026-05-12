@@ -859,15 +859,15 @@ looker.plugins.visualizations.add({
         }
       };
 
+      let limit =
+        config.viz_trellis_by === 'row'
+          ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
+          : Math.min(
+              config.trellis_cols * config.trellis_rows,
+              queryResponse.pivots.length
+            );
       // map the properties to an array of components instead of calling ReactDOM.render in a loop
       const trellisComponents = chunk_multiples.map(function (d, i) {
-        let limit =
-          config.viz_trellis_by === 'row'
-            ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
-            : Math.min(
-                config.trellis_cols * config.trellis_rows,
-                queryResponse.pivots.length
-              );
 
         const subGaugeProps = {
           done: wrappedDone, // Use the wrapped tracker instead of the raw done()
