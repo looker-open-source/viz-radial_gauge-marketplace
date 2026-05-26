@@ -6,6 +6,18 @@ import {trimSpecialCharacters} from './string';
 
 const DEFAULT_MAX_RANGE = null;
 
+export const calculateTrellisLimit = (trellisBy, cols, rows, dataLength, pivotsLength) => {
+  // in case cols/rows are undefined
+  const maxGauges = (cols || 1) * (rows || 1);
+
+  if (trellisBy === 'row') {
+    return Math.min(maxGauges, dataLength);
+  } else {
+    // assume if it's not 'row', it is 'pivot'
+    return Math.min(maxGauges, pivotsLength);
+  }
+};
+
 function processPivot(data, queryResponse, config, viz, pivotKey) {
   data = data.length === undefined ? [data] : data;
   let dims, meas;
@@ -738,15 +750,18 @@ looker.plugins.visualizations.add({
         config[option] = this.options[option].default;
       }
     }
+    const limit = calculateTrellisLimit(
+      config.viz_trellis_by,
+      config.trellis_cols,
+      config.trellis_rows,
+      data.length,
+      queryResponse.pivots ? queryResponse.pivots.length : 0
+    );
 
     // Extract value, value_label, target, target_label as a chunk
     let chunk;
     let chunk_multiples = [];
     if (config.viz_trellis_by === 'row') {
-      let limit = Math.min(
-        config.trellis_cols * config.trellis_rows,
-        data.length
-      );
       data.forEach((d, i) => {
         chunk = processData(data[i], queryResponse, config, this);
         if (i <= limit - 1) {
@@ -754,10 +769,6 @@ looker.plugins.visualizations.add({
         }
       });
     } else if (config.viz_trellis_by === 'pivot') {
-      let limit = Math.min(
-        config.trellis_cols * config.trellis_rows,
-        queryResponse.pivots.length
-      );
       queryResponse.pivots.forEach((d, i) => {
         chunk = processPivot(data, queryResponse, config, this, d.key);
         if (i <= limit - 1) {
@@ -859,13 +870,6 @@ looker.plugins.visualizations.add({
         }
       };
 
-      let limit =
-        config.viz_trellis_by === 'row'
-          ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
-          : Math.min(
-              config.trellis_cols * config.trellis_rows,
-              queryResponse.pivots.length
-            );
       // map the properties to an array of components instead of calling ReactDOM.render in a loop
       const trellisComponents = chunk_multiples.map(function (d, i) {
 
