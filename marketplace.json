@@ -2,7 +2,7 @@
   "label": "Radial Gauge Visualization",
   "category_label": "Plug-ins",
   "branding": {
-    "image_uri": "https://marketplace-api.looker.com/visualization-screenshots/radial_gauge_icon.png",
+    "image_uri": "https://static-a.cdn.looker.app/marketplace/visualization-screenshots/radial_gauge_icon.png",
     "tagline": "Use the Radial Gauge visualization to display a measure and progress to a goal with a highly customizable gauge."
   },
   "constants": {
