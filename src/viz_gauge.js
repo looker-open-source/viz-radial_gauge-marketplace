@@ -6,6 +6,18 @@ import {trimSpecialCharacters} from './string';
 
 const DEFAULT_MAX_RANGE = null;
 
+export const calculateTrellisLimit = (trellisBy, cols, rows, dataLength, pivotsLength) => {
+  // in case cols/rows are undefined
+  const maxGauges = (cols || 1) * (rows || 1);
+
+  if (trellisBy === 'row') {
+    return Math.min(maxGauges, dataLength);
+  } else {
+    // assume if it's not 'row', it is 'pivot'
+    return Math.min(maxGauges, pivotsLength);
+  }
+};
+
 function processPivot(data, queryResponse, config, viz, pivotKey) {
   data = data.length === undefined ? [data] : data;
   let dims, meas;
@@ -703,6 +715,7 @@ looker.plugins.visualizations.add({
       this.addError({
         title: 'No Results',
       });
+      done();
       return;
     }
 
@@ -715,6 +728,7 @@ looker.plugins.visualizations.add({
         title: 'Invalid Input.',
         message: 'This chart accepts up to 1 dimension and 2 measures.',
       });
+      done();
       return;
     }
 
@@ -726,6 +740,7 @@ looker.plugins.visualizations.add({
         title: 'Invalid Input.',
         message: 'Add pivots or change trellis type.',
       });
+      done();
       return;
     }
 
@@ -735,15 +750,18 @@ looker.plugins.visualizations.add({
         config[option] = this.options[option].default;
       }
     }
+    const limit = calculateTrellisLimit(
+      config.viz_trellis_by,
+      config.trellis_cols,
+      config.trellis_rows,
+      data.length,
+      queryResponse.pivots ? queryResponse.pivots.length : 0
+    );
 
     // Extract value, value_label, target, target_label as a chunk
     let chunk;
     let chunk_multiples = [];
     if (config.viz_trellis_by === 'row') {
-      let limit = Math.min(
-        config.trellis_cols * config.trellis_rows,
-        data.length
-      );
       data.forEach((d, i) => {
         chunk = processData(data[i], queryResponse, config, this);
         if (i <= limit - 1) {
@@ -751,10 +769,6 @@ looker.plugins.visualizations.add({
         }
       });
     } else if (config.viz_trellis_by === 'pivot') {
-      let limit = Math.min(
-        config.trellis_cols * config.trellis_rows,
-        queryResponse.pivots.length
-      );
       queryResponse.pivots.forEach((d, i) => {
         chunk = processPivot(data, queryResponse, config, this, d.key);
         if (i <= limit - 1) {
@@ -778,6 +792,7 @@ looker.plugins.visualizations.add({
     var viz = this;
     if (config.viz_trellis_by === 'none') {
       viz.radialProps = {
+        done: done,
         cleanup: `gauge`,
         trellis_by: config.viz_trellis_by,
         w: width,
@@ -838,19 +853,32 @@ looker.plugins.visualizations.add({
         viz.container
       );
     } else {
-      chunk_multiples.forEach(function (d, i) {
-        let limit =
-          config.viz_trellis_by === 'row'
-            ? Math.min(config.trellis_cols * config.trellis_rows, data.length)
-            : Math.min(
-                config.trellis_cols * config.trellis_rows,
-                queryResponse.pivots.length
-              );
-        viz.radialProps = {
+      // fallback done() in case chunk_multiples is totally empty during a trellis render
+      if (chunk_multiples.length === 0) {
+        done();
+        return;
+      }
+
+      // tracking mechanism to ensure done() is called only once, after all gauges finish
+      let gaugesFinished = 0;
+      const totalGauges = chunk_multiples.length;
+
+      const wrappedDone = () => {
+        gaugesFinished++;
+        if (gaugesFinished === totalGauges) {
+          done();
+        }
+      };
+
+      // map the properties to an array of components instead of calling ReactDOM.render in a loop
+      const trellisComponents = chunk_multiples.map(function (d, i) {
+
+        const subGaugeProps = {
+          done: wrappedDone, // Use the wrapped tracker instead of the raw done()
           cleanup: `subgauge${i}`,
           trellis_by: config.viz_trellis_by,
           trellis_limit: limit,
-          w: width / config.trellis_cols, // GAUGE SETTINGS
+          w: width / config.trellis_cols,
           h: height / config.trellis_rows,
           limiting_aspect: width < height ? 'vw' : 'vh',
           margin: margin,
@@ -876,22 +904,18 @@ looker.plugins.visualizations.add({
           gauge_fill_type: config.gauge_fill_type,
           fill_colors: config.fill_colors,
           range_color: config.range_color,
-
-          spinner: config.spinner_length, // SPINNER SETTINGS
+          spinner: config.spinner_length,
           spinner_weight: config.spinner_weight,
           spinner_background: config.spinner_color,
           spinner_type: config.spinner_type,
-
-          arm: config.arm_length, // ARM SETTINGS
+          arm: config.arm_length,
           arm_weight: config.arm_weight,
-
-          target_length: config.target_length, // TARGET SETTINGS
+          target_length: config.target_length,
           target_gap: config.target_gap,
           target_weight: config.target_weight,
           target_background: '#282828',
           target_source: config.target_source,
-
-          value_label_type: config.value_label_type, // LABEL SETTINGS
+          value_label_type: config.value_label_type,
           value_label_font: config.value_label_font,
           value_label_padding: config.value_label_padding,
           target_label_type: config.target_label_type,
@@ -899,14 +923,16 @@ looker.plugins.visualizations.add({
           target_label_padding: config.target_label_padding,
           wrap_width: 100,
         };
-        viz.chart = ReactDOM.render(
-          <RadialGauge {...viz.radialProps} />,
-          viz.container
-        );
-      });
-    }
 
-    // We are done rendering! Let Looker know.
-    done();
+        // render each gauge into the array using a unique key
+        return <RadialGauge key={`subgauge-${i}`} {...subGaugeProps} />;
+      });
+
+      // render the entire array of components simultaneously in one React Fragment
+      viz.chart = ReactDOM.render(
+        <React.Fragment>{trellisComponents}</React.Fragment>,
+        viz.container
+      );
+    }
   },
 });
