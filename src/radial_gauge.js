@@ -1,3 +1,8 @@
+// © 2020 Google LLC.  All rights reserved.
+//
+// This software is subject to the Google Cloud Terms of Service, as
+// modified by the "General Software Terms" of the Google Cloud Service Specific Terms, available at: https://cloud.google.com/terms/service-terms.
+
 import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 import SSF from 'ssf';
@@ -6,10 +11,22 @@ import {mapBetween} from './math';
 import {getLabel} from './string';
 
 const RadialGauge = props => {
+  const containerRef = React.useRef(null);
+
   useEffect(() => {
-    drawRadial(props);
+    if (containerRef.current) {
+      try {
+        drawRadial(props, containerRef.current);
+      } catch (error) {
+        console.error('Radial Gauge Rendering Error:', error);
+      } finally {
+        if (props.done) {
+          props.done();
+        }
+      }
+    }
   }, [props]);
-  return <div className="viz" />;
+  return <div className="viz" ref={containerRef} />;
 };
 
 function wrap(text, width) {
@@ -47,7 +64,10 @@ function wrap(text, width) {
   });
 }
 
-const drawRadial = props => {
+const drawRadial = (props, container) => {
+  if (Number.isNaN(props.value) || !props.range || !props.w || !props.h) {
+    return;
+  }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
   let radius = 0.4 * Math.min(props.w, props.h);
   let cutoutCalc = radius * (props.cutout / 100);
@@ -93,16 +113,16 @@ const drawRadial = props => {
   }
   // div that houses the svg
   var div = d3
-    .select('.viz')
-    .style('overflow-x', 'hidden')
-    .style('overflow-y', 'hidden')
-    .style('position', 'fixed')
-    .attr('height', '100%');
+    .select(container)
+    .style('overflow', 'hidden')
+    .style('position', 'relative')
+    .attr('height', props.h + 'px')
+    .attr('width', props.target_weight + 'px');
   // append a fresh svg
-  const svg = d3.select('.viz').append('svg');
+  const svg = d3.select(container).append('svg');
   svg
-    .attr('width', props.w)
-    .attr('height', props.h)
+    .attr('width', '100%')
+    .attr('height', '100%')
     .attr('id', 'svg-viz')
     .attr('class', props.cleanup)
     .attr('preserveAspectRatio', 'xMidYMid meet')

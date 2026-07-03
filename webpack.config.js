@@ -8,9 +8,12 @@ var webpackConfig = {
     radialgauge: './src/viz_gauge.js',
   },
   devServer: {
-    contentBase: './dist',
+    static: {
+      directory: './dist',
+    },
   },
   output: {
+    hashFunction: 'sha256',
     filename: 'bundle.js',
     path: path.join(__dirname,'/dist'),
   },

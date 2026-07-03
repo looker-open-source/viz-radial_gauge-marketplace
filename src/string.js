@@ -1,3 +1,8 @@
+// © 2020 Google LLC.  All rights reserved.
+//
+// This software is subject to the Google Cloud Terms of Service, as
+// modified by the "General Software Terms" of the Google Cloud Service Specific Terms, available at: https://cloud.google.com/terms/service-terms.
+
 /** Regular expression for the special characters that are trimmed by
  * default from a string. */
 const LEADING_TRAILING_SPECIAL_CHARS_REGEX =
