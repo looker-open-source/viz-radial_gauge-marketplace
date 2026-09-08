@@ -14,15 +14,15 @@ const RadialGauge = props => {
   const containerRef = React.useRef(null);
 
   useEffect(() => {
-    if (containerRef.current) {
-      try {
+    try {
+      if (containerRef.current) {
         drawRadial(props, containerRef.current);
-      } catch (error) {
-        console.error('Radial Gauge Rendering Error:', error);
-      } finally {
-        if (props.done) {
-          props.done();
-        }
+      }
+    } catch (error) {
+      console.error('Radial Gauge Rendering Error:', error);
+    } finally {
+      if (props.done) {
+        props.done();
       }
     }
   }, [props]);
@@ -65,7 +65,13 @@ function wrap(text, width) {
 }
 
 const drawRadial = (props, container) => {
-  if (Number.isNaN(props.value) || !props.range || !props.w || !props.h) {
+  if (
+    props.value == null ||
+    Number.isNaN(props.value) ||
+    !props.range ||
+    !props.w ||
+    !props.h
+  ) {
     return;
   }
   let limiting_aspect = props.w < props.h ? 'vw' : 'vh';
@@ -79,18 +85,6 @@ const drawRadial = (props, container) => {
     radius * spinnerStandard < cutoutCalc
       ? cutoutCalc
       : radius * spinnerStandard;
-
-  if (props.target === undefined) {
-    let max =
-      props.range != undefined
-        ? props.range[1]
-        : Math.round(Math.max(value) * 1.3);
-  } else {
-    let max =
-      props.range != undefined
-        ? props.range[1]
-        : Math.round(Math.max(value, target) * 1.3);
-  }
 
   // Ditch whatever is in our viz window
   if (props.trellis_by === 'none') {

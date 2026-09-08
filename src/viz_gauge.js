@@ -330,7 +330,12 @@ function processData(data, queryResponse, config, viz) {
 }
 
 // const formattedValue = dataPoints[0].valueFormat === "" ? dataPoints[0].formattedValue : SSF.format(dataPoints[0].valueFormat, dataPoints[0].value)
-looker.plugins.visualizations.add({
+if (
+  typeof looker !== 'undefined' &&
+  looker.plugins &&
+  looker.plugins.visualizations
+) {
+  looker.plugins.visualizations.add({
   id: 'gauge',
   label: 'Gauge Visualization',
   primary: true,
@@ -704,7 +709,8 @@ looker.plugins.visualizations.add({
   },
   // Render in response to the data or settings changing
   updateAsync: function (data, element, config, queryResponse, details, done) {
-    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    try {
+      var margin = {top: 20, right: 20, bottom: 20, left: 20},
       width = element.clientWidth,
       height = element.clientHeight;
 
@@ -939,5 +945,14 @@ looker.plugins.visualizations.add({
         viz.container
       );
     }
+    } catch (error) {
+      console.error('Error rendering Radial Gauge visualization:', error);
+      this.addError({
+        title: 'Rendering Error',
+        message: error.message || 'An error occurred while rendering.',
+      });
+      done();
+    }
   },
 });
+}
