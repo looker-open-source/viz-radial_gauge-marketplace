@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.4...v1.0.5) (2026-09-10)
+
+
+### Bug Fixes
+
+* ensure done callback execution and defensive error handling for pdf rendering ([#98](https://github.com/looker-open-source/viz-radial_gauge-marketplace/issues/98)) ([b0751b4](https://github.com/looker-open-source/viz-radial_gauge-marketplace/commit/b0751b4d4037b8c616d99a211ac44da28a56eb94))
+
 ## [1.0.4](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.3...v1.0.4) (2026-06-03)
 
 
