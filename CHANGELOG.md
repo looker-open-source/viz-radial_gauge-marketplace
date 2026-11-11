@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.5...v2.0.4) (2026-11-10)
+
+
+### Miscellaneous Chores
+
+* sync release version with marketplace listing ([#116](https://github.com/looker-open-source/viz-radial_gauge-marketplace/issues/116)) ([dcae864](https://github.com/looker-open-source/viz-radial_gauge-marketplace/commit/dcae864e3c3f14cb0fb91953c151ead535e18417))
+
 ## [1.0.5](https://github.com/looker-open-source/viz-radial_gauge-marketplace/compare/v1.0.4...v1.0.5) (2026-09-10)
 
 
